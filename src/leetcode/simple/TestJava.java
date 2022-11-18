@@ -1,55 +1,48 @@
 package leetcode.simple;
 
+import java.util.Stack;
 import java.util.TreeSet;
 
 public class TestJava {
 
     public static void main(String[] args) throws InterruptedException {
-        System.out.println(new TestJava().lengthOfLastWord("ab    "));
+        System.out.println(new TestJava().addBinary("1111","1111"));
     }
 
-    /**
-     * 58. 最后一个单词的长度
-     * 简单
-     * 519
-     * 相关企业
-     * 给你一个字符串 s，由若干单词组成，单词前后用一些空格字符隔开。返回字符串中 最后一个 单词的长度。
-     *
-     * 单词 是指仅由字母组成、不包含任何空格字符的最大子字符串。
-     *
-     *
-     *
-     * 示例 1：
-     *
-     * 输入：s = "Hello World"
-     * 输出：5
-     * 解释：最后一个单词是“World”，长度为5。
-     * 示例 2：
-     *
-     * 输入：s = "   fly me   to   the moon  "
-     * 输出：4
-     * 解释：最后一个单词是“moon”，长度为4。
-     * @param s
-     * @return
-     */
-    public int lengthOfLastWord(String s) {
-        Integer len = s.length();
-
-        Integer a = len - 1, b = len - 1;
-
-        while(true){
-            if(b>=0 && s.charAt(b)==' '){
-                b--;
-                a=b;
-            }else{
-                if(a>=0 && s.charAt(a)!=' '){
-                    a--;
-                }else{
-                    break;
-                }
+    public String addBinary(String a, String b) {
+        int i=a.length()-1,j=b.length()-1;
+        StringBuilder bitsResult = new StringBuilder();
+        int borrow = 0;
+        while( i >= 0 || j >= 0){
+            int sumBit = 0;
+            Integer aBit = 0;
+            if(i>=0){
+                aBit = a.charAt(i) - '0';
             }
+            Integer bBit = 0;
+            if(j>=0){
+                bBit = b.charAt(j) - '0';
+            }
+
+            sumBit = aBit + bBit + borrow;
+
+            if(sumBit>=2){
+                borrow = 1;
+            }else{
+                borrow = 0;
+            }
+            sumBit = sumBit % 2;
+
+            bitsResult.append(sumBit);
+
+            j--;
+            i--;
+        }
+        if(borrow>0) {
+            bitsResult.append(borrow);
         }
 
-        return b-a;
+        return bitsResult.reverse().toString();
+
     }
 }
