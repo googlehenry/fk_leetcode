@@ -5,30 +5,51 @@ import java.util.TreeSet;
 public class TestJava {
 
     public static void main(String[] args) throws InterruptedException {
-        System.out.println(new TestJava().longestCommonPrefix(new String[]{"cir","car","c"}));
+        System.out.println(new TestJava().lengthOfLastWord("ab    "));
     }
 
-    //编写一个函数来查找字符串数组中的最长公共前缀。
-    //如果不存在公共前缀，返回空字符串 “”。
-    //示例 1：
-    //输入：strs = [“flower”,“flow”,“flight”]
-    //输出：“fl”
-    //最长公共前缀
-    public String longestCommonPrefix(String[] strs) {
-        //假设首先理解了字典序概念以后，把数组进行排序，这时候只需要看第一个字符串和最后一个字符串的公共前缀了，相当于夹逼
-        TreeSet<String> set = new TreeSet<>();
-        for(String str:strs){
-            set.add(str);
+    /**
+     * 58. 最后一个单词的长度
+     * 简单
+     * 519
+     * 相关企业
+     * 给你一个字符串 s，由若干单词组成，单词前后用一些空格字符隔开。返回字符串中 最后一个 单词的长度。
+     *
+     * 单词 是指仅由字母组成、不包含任何空格字符的最大子字符串。
+     *
+     *
+     *
+     * 示例 1：
+     *
+     * 输入：s = "Hello World"
+     * 输出：5
+     * 解释：最后一个单词是“World”，长度为5。
+     * 示例 2：
+     *
+     * 输入：s = "   fly me   to   the moon  "
+     * 输出：4
+     * 解释：最后一个单词是“moon”，长度为4。
+     * @param s
+     * @return
+     */
+    public int lengthOfLastWord(String s) {
+        Integer len = s.length();
+
+        Integer a = len - 1, b = len - 1;
+
+        while(true){
+            if(b>=0 && s.charAt(b)==' '){
+                b--;
+                a=b;
+            }else{
+                if(a>=0 && s.charAt(a)!=' '){
+                    a--;
+                }else{
+                    break;
+                }
+            }
         }
-        String sortedFirst = set.first();
-        String sortedLast = set.last();
 
-        String common = sortedFirst;
-
-        while(!sortedLast.startsWith(common)){
-            common = common.substring(0,common.length()-1);
-        }
-
-        return common;
+        return b-a;
     }
 }
