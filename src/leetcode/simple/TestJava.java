@@ -1,102 +1,88 @@
 package leetcode.simple;
 
+import javax.swing.*;
 import javax.swing.tree.TreeNode;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 
 public class TestJava {
 
     public static void main(String[] args) throws InterruptedException {
-        System.out.println(new TestJava().binaryTreePaths(new TreeNode(1, new TreeNode(2, null, new TreeNode(5, null, null)), new TreeNode(3, null, null))));
+        System.out.println(new TestJava().wordPattern("abba", "dog cat cat dog"));
     }
 
     /**
-     * 257. 二叉树的所有路径
+     * 290. 单词规律
      * 简单
-     * 848
+     * 519
      * 相关企业
-     * 给你一个二叉树的根节点 root ，按 任意顺序 ，返回所有从根节点到叶子节点的路径。
+     * 给定一种规律 pattern 和一个字符串 s ，判断 s 是否遵循相同的规律。
      *
-     * 叶子节点 是指没有子节点的节点。
-     *
-     *
-     * 示例 1：
+     * 这里的 遵循 指完全匹配，例如， pattern 里的每个字母和字符串 s 中的每个非空单词之间存在着双向连接的对应规律。
      *
      *
-     * 输入：root = [1,2,3,null,5]
-     * 输出：["1->2->5","1->3"]
-     * 示例 2：
      *
-     * 输入：root = [1]
-     * 输出：["1"]
-     * @param root
+     * 示例1:
+     *
+     * 输入: pattern = "abba", s = "dog cat cat dog"
+     * 输出: true
+     * 示例 2:
+     *
+     * 输入:pattern = "abba", s = "dog cat cat fish"
+     * 输出: false
+     * 示例 3:
+     *
+     * 输入: pattern = "aaaa", s = "dog cat cat dog"
+     * 输出: false
+     * @param pattern
+     * @param s
      * @return
-     *
-     * BFS广度优先
+     * 双指针：s中以单词为单位,pattern中以char为单位。
      */
-    public List<String> binaryTreePaths(TreeNode root) {
-        Stack<Object> stack = new Stack<>();
-        stack.add(root);
-        ArrayList<Integer> holder = new ArrayList<Integer>();
-        stack.add(holder);
+    public boolean wordPattern(String pattern, String s) {
+        s = s.trim();
 
-        List<String> paths = new ArrayList<>();
+        Map<Character,String> mappings = new HashMap<>();
 
-        while(!stack.isEmpty()){
-            processNode(stack,paths);
-        }
+        for(int i=0,j=0,k=0; j<s.length() || k<pattern.length();){
 
-        return paths;
-    }
+            if(s.charAt(j)==' '|| j==s.length()-1){
+                String word = s.substring(i, j==s.length()-1?s.length():j);
+                Character c = pattern.charAt(k);
 
-    private List<String> processNode(Stack<Object> nodes, List<String> paths){
-        ArrayList<Integer> holder = (ArrayList<Integer>) nodes.pop();
-        TreeNode node = (TreeNode) nodes.pop();
-        holder.add(node.val);
-        if(node.left==null && node.right==null){
-            //create path
-            StringBuilder stringBuilder = new StringBuilder();
-            for(Integer point:holder){
-                stringBuilder.append("->").append(point);
+                if (mappings.containsKey(c)) {
+                    if(!mappings.get(c).equals(word)){
+                        return  false;
+                    }
+                }else{
+                    if(mappings.containsValue(word)){
+                        return false;
+                    }
+                }
+                mappings.put(c, word);
+
+
+                if(j==s.length()-1){
+                    //word is done
+                    if(k<pattern.length()-1){
+                        return false;
+                    }
+                }
+                if(k==pattern.length()-1){
+                    //pattern is done
+                    if(j<s.length()-1){
+                        return false;
+                    }
+                }
+
+                k++;
+                i = j+1;
             }
-            paths.add(stringBuilder.substring(2));
-        }else{
 
-            if(node.left!=null){
-                nodes.add(node.left);
-                nodes.add(holder.clone());
-            }
-            if(node.right!=null){
-                nodes.add(node.right);
-                nodes.add(holder.clone());
-            }
-
+            j++;
         }
 
-        return paths;
-    }
+        return true;
 
-    /**
-     * Definition for a binary tree node.
-     */
-    public static class TreeNode {
-        int val;
-        TreeNode left;
-        TreeNode right;
-
-        TreeNode() {
-        }
-
-        TreeNode(int val) {
-            this.val = val;
-        }
-
-        public TreeNode(int val, TreeNode left, TreeNode right) {
-            this.val = val;
-            this.left = left;
-            this.right = right;
-        }
     }
 
 }
