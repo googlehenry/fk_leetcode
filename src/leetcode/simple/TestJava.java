@@ -39,6 +39,7 @@ public class TestJava {
      * @param s
      * @param t
      * @return
+     * 双向一对一
      */
     public boolean isIsomorphic(String s, String t) {
         if(s.length()!=t.length()){
