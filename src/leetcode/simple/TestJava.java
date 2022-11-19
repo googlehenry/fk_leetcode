@@ -46,26 +46,20 @@ public class TestJava {
         }
 
         Map<Character,Character> mapB2A = new HashMap<>();
-        Map<Character,Character> mapA2B = new HashMap<>();
         for(int i=0;i<s.length();i++){
 
             Character a = s.charAt(i);
             Character b = t.charAt(i);
 
             if(!mapB2A.containsKey(b)){
-                mapB2A.put(b,a);
+                if(mapB2A.containsValue(a)){
+                    return false;
+                }else {
+                    mapB2A.put(b, a);
+                }
             }else{
                 Character lastMapping = mapB2A.get(b);
                 if(lastMapping!=a){
-                    return false;
-                }
-            }
-
-            if(!mapA2B.containsKey(a)){
-                mapA2B.put(a,b);
-            }else{
-                Character lastMapping = mapA2B.get(a);
-                if(lastMapping!=b){
                     return false;
                 }
             }
