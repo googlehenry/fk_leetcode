@@ -2,52 +2,64 @@ package leetcode.simple;
 
 import java.util.Stack;
 import java.util.TreeSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class TestJava {
 
     public static void main(String[] args) throws InterruptedException {
-        System.out.println(new TestJava().addBinary("1111","1111"));
+        System.out.println(new TestJava().isPalindrome("a"));
     }
 
     /**
-     * 67. 二进制求和
+     *125. 验证回文串
      * 简单
-     * 919
+     * 593
      * 相关企业
-     * 给你两个二进制字符串 a 和 b ，以二进制字符串的形式返回它们的和。
+     * 如果在将所有大写字符转换为小写字符、并移除所有非字母数字字符之后，短语正着读和反着读都一样。则可以认为该短语是一个 回文串 。
+     *
+     * 字母和数字都属于字母数字字符。
+     *
+     * 给你一个字符串 s，如果它是 回文串 ，返回 true ；否则，返回 false 。
      *
      *
      *
      * 示例 1：
      *
-     * 输入:a = "11", b = "1"
-     * 输出："100"
+     * 输入: s = "A man, a plan, a canal: Panama"
+     * 输出：true
+     * 解释："amanaplanacanalpanama" 是回文串。
      * 示例 2：
      *
-     * 输入：a = "1010", b = "1011"
-     * 输出："10101"
-     * @param a
-     * @param b
+     * 输入：s = "race a car"
+     * 输出：false
+     * 解释："raceacar" 不是回文串。
+     * 示例 3：
+     *
+     * 输入：s = " "
+     * 输出：true
+     * 解释：在移除非字母数字字符之后，s 是一个空字符串 "" 。
+     * 由于空字符串正着反着读都一样，所以是回文串。
+     * @param s
      * @return
-     * 核心思想就是：a+b+进位,然后根据sum确定这一位和新进位的值。
+     * 双指针收尾按位比较，不等则不是，相等就像中间移动直到指针相遇。
      */
-    public String addBinary(String a, String b) {
-        StringBuilder bitsResult = new StringBuilder();
-        int borrow = 0;
+    public boolean isPalindrome(String s) {
+        s = s.toLowerCase();
+        Pattern pattern = Pattern.compile("[a-zA-Z\\d]*");
+        Matcher matcher = pattern.matcher(s);
 
-        for(int i=a.length()-1, j=b.length()-1; i>=0||j>=0; i--,j--){
-            int sum = borrow;
-            sum += i>=0?a.charAt(i)-'0':0;
-            sum += j>=0?b.charAt(j)-'0':0;
-
-            bitsResult.append(sum % 2);
-            borrow = sum /2;
+        StringBuilder stringBuilder = new StringBuilder();
+        while(matcher.find()){
+            stringBuilder.append(matcher.group());
+        }
+        s = stringBuilder.toString();
+        for(int i=0,j=s.length()-1;i<=j;i++,j--){
+            if(s.charAt(i)!=s.charAt(j)){
+                return false;
+            }
         }
 
-        bitsResult.append(borrow==0?"":borrow);
-
-
-        return bitsResult.reverse().toString();
-
+        return true;
     }
 }
