@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 public class TestJava {
 
     public static void main(String[] args) throws InterruptedException {
-        System.out.println(new TestJava().isPalindrome("a1ba"));
+        System.out.println(new TestJava().isPalindrome("aba"));
     }
 
     /**
@@ -44,23 +44,28 @@ public class TestJava {
      * 双指针收尾按位比较，不等则不是，相等就像中间移动直到指针相遇。
      */
     public boolean isPalindrome(String s) {
-        s = s.toLowerCase();
-        Set<Character> characterSet = new HashSet<>();
-        char[] chars = "abcdefghijklmnopqrstuvwxyz0123456789".toCharArray();
-        for(int i=0;i<chars.length;i++){
-            characterSet.add(chars[i]);
+        s=s.toLowerCase();
+        Set<Character> chars = new HashSet<>();
+        char[] charstr = "abcdefghijklmnopqrstuvwxyz0123456789".toCharArray();
+        for(int i=0;i<charstr.length;i++){
+            chars.add(charstr[i]);
         }
 
-        StringBuilder stringBuilder = new StringBuilder();
-        for(int i=0;i<s.length();i++){
-            if(characterSet.contains(s.charAt(i))){
-                stringBuilder.append(s.charAt(i));
-            }
-        }
-        s = stringBuilder.toString();
-        for(int i=0,j=s.length()-1;i<=j;i++,j--){
-            if(s.charAt(i)!=s.charAt(j)){
+        for(int i=0,j=s.length()-1;i<=j;){
+            //prepare chars
+            char leftChar = s.charAt(i);
+            char rightChar = s.charAt(j);
+
+
+            if(!chars.contains(leftChar)){
+                i++;
+            }else if(!chars.contains(rightChar)){
+                j--;
+            }else if(chars.contains(leftChar)&&chars.contains(rightChar)&&leftChar!=rightChar){
                 return false;
+            }else{
+                i++;
+                j--;
             }
         }
 
