@@ -41,7 +41,7 @@ public class TestJava {
      * 由于空字符串正着反着读都一样，所以是回文串。
      * @param s
      * @return
-     * 双指针收尾按位比较，不等则不是，相等就像中间移动直到指针相遇。
+     * 使用工具
      */
     public boolean isPalindrome(String s) {
         s=s.toLowerCase();
@@ -51,24 +51,12 @@ public class TestJava {
             chars.add(charstr[i]);
         }
 
-        for(int i=0,j=s.length()-1;i<=j;){
-            //prepare chars
-            char leftChar = s.charAt(i);
-            char rightChar = s.charAt(j);
+        StringBuilder stringBuilder = new StringBuilder();
 
-
-            if(!chars.contains(leftChar)){
-                i++;
-            }else if(!chars.contains(rightChar)){
-                j--;
-            }else if(chars.contains(leftChar)&&chars.contains(rightChar)&&leftChar!=rightChar){
-                return false;
-            }else{
-                i++;
-                j--;
-            }
+        for(int i=0;i<s.length();i++){
+            stringBuilder.append(chars.contains(s.charAt(i))?s.charAt(i):"");
         }
 
-        return true;
+        return stringBuilder.toString().equals(stringBuilder.reverse().toString());
     }
 }
