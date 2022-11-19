@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 public class TestJava {
 
     public static void main(String[] args) throws InterruptedException {
-        System.out.println(new TestJava().equalFrequency("aabbcc"));
+        System.out.println(new TestJava().equalFrequency("bac"));
     }
 
     /**
@@ -43,18 +43,52 @@ public class TestJava {
     public boolean equalFrequency(String word) {
         Map<Character,Integer> counter = new HashMap<>();
         for(int i=0;i<word.length();i++){
-            for(int j=0;j<i;j++){
-                counter.put(word.charAt(j), counter.get(word.charAt(j))==null?1:counter.get(word.charAt(j))+1);
-            }
-            for(int j=word.length()-1;j>i;j--){
-                counter.put(word.charAt(j), counter.get(word.charAt(j))==null?1:counter.get(word.charAt(j))+1);
-            }
-            if(counter.values().stream().collect(Collectors.toSet()).size()==1){
-                return true;
-            }
-            counter.clear();
+            counter.put(word.charAt(i), counter.get(word.charAt(i))==null?1:counter.get(word.charAt(i))+1);
         }
-        return false;
+
+        List<Integer> freqList = new ArrayList<Integer>(counter.values()).stream().sorted().toList();
+        //[1,1,1,2,3]
+
+        if(freqList.get(0)==1){
+            //后面必须一致,return true
+            if(freqList.size()>1) {
+                Integer keep = freqList.get(1);
+                boolean match = true;
+                for (int i = 1; i < freqList.size(); i++) {
+                    if(freqList.get(i)!=keep){
+                        match= false;
+                        break;
+                    }
+                }
+
+                if(!match) {
+                    match = true;
+                    Integer keep2 = freqList.get(freqList.size() - 1) - 1;
+                    if (freqList.size() > 1) {
+                        for (int i = freqList.size() - 2; i >= 0; i--) {
+                            if (freqList.get(i) != keep2) {
+                                match= false;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                return match;
+            }
+            return true;
+        }else {
+            Integer keep = freqList.get(freqList.size()-1)-1;
+            if(freqList.size()>1) {
+                for (int i = freqList.size() - 2; i >= 0; i--) {
+                    if (freqList.get(i) != keep) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
     }
 
 }
