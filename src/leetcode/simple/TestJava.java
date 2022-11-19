@@ -7,67 +7,72 @@ import java.util.regex.Pattern;
 public class TestJava {
 
     public static void main(String[] args) throws InterruptedException {
-        System.out.println(new TestJava().isPalindrome("aba"));
+        System.out.println(new TestJava().isValid("{[]}()[]"));
     }
 
     /**
-     *125. 验证回文串
+     * 20. 有效的括号
      * 简单
-     * 593
+     * 3.6K
      * 相关企业
-     * 如果在将所有大写字符转换为小写字符、并移除所有非字母数字字符之后，短语正着读和反着读都一样。则可以认为该短语是一个 回文串 。
+     * 给定一个只包括 '('，')'，'{'，'}'，'['，']' 的字符串 s ，判断字符串是否有效。
      *
-     * 字母和数字都属于字母数字字符。
+     * 有效字符串需满足：
      *
-     * 给你一个字符串 s，如果它是 回文串 ，返回 true ；否则，返回 false 。
-     *
+     * 左括号必须用相同类型的右括号闭合。
+     * 左括号必须以正确的顺序闭合。
+     * 每个右括号都有一个对应的相同类型的左括号。
      *
      *
      * 示例 1：
      *
-     * 输入: s = "A man, a plan, a canal: Panama"
+     * 输入：s = "()"
      * 输出：true
-     * 解释："amanaplanacanalpanama" 是回文串。
      * 示例 2：
      *
-     * 输入：s = "race a car"
-     * 输出：false
-     * 解释："raceacar" 不是回文串。
+     * 输入：s = "()[]{}"
+     * 输出：true
      * 示例 3：
      *
-     * 输入：s = " "
-     * 输出：true
-     * 解释：在移除非字母数字字符之后，s 是一个空字符串 "" 。
-     * 由于空字符串正着反着读都一样，所以是回文串。
+     * 输入：s = "(]"
+     * 输出：false
      * @param s
      * @return
-     * 双指针收尾按位比较，不等则不是，相等就像中间移动直到指针相遇。
-     * 优化一步比较，不用set判断valid.
      */
-    public boolean isPalindrome(String s) {
-        s = s.toLowerCase();
-        for(int i=0,j=s.length()-1;i<=j;){
-            //prepare chars
-            char leftChar = s.charAt(i);
-            char rightChar = s.charAt(j);
-
-
-            if(!validChar(leftChar)){
-                i++;
-            }else if(!validChar(rightChar)){
-                j--;
-            }else if(validChar(leftChar)&&validChar(rightChar)&&leftChar!=rightChar){
-                return false;
-            }else{
-                i++;
-                j--;
+    public boolean isValid(String s) {
+        Stack<Character> stack = new Stack<>();
+        if(s.length()%2!=0){
+            return false;
+        }else{
+            for(int i=0;i<s.length();i++){
+                if(stack.isEmpty()){
+                    stack.add(s.charAt(i));
+                }else{
+                    if(validLeft(s.charAt(i))){
+                        stack.add(s.charAt(i));
+                    }else{
+                        //compare if correctly closing
+                        if(!validPair(stack.pop(), s.charAt(i))){
+                            return false;
+                        }
+                    }
+                }
             }
+            return stack.isEmpty();
         }
-
-        return true;
     }
 
-    private boolean validChar(char c){
-        return (c>='a' && c<='z')||(c>='0' && c<='9');
+    private boolean validPair(char a,char b){
+        boolean valid = false;
+        switch (a){
+            case '(': valid=b==')';break;
+            case '{': valid=b=='}';break;
+            case '[': valid=b==']';break;
+        }
+        return valid;
     }
+    private boolean validLeft(char a){
+        return a=='('||a=='{'||a=='[';
+    }
+
 }
