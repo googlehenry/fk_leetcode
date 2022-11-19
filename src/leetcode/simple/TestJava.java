@@ -1,71 +1,89 @@
 package leetcode.simple;
 
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
+import javax.swing.tree.TreeNode;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TestJava {
 
     public static void main(String[] args) throws InterruptedException {
-        System.out.println(new TestJava().isIsomorphic("foo","bar"));
+
+        System.out.println(new TestJava().binaryTreePaths(new TreeNode(1, new TreeNode(2, null, new TreeNode(5, null, null)), new TreeNode(3, null, null))));
     }
 
     /**
-     * 205. 同构字符串
+     * 257. 二叉树的所有路径
      * 简单
-     * 540
+     * 848
      * 相关企业
-     * 给定两个字符串 s 和 t ，判断它们是否是同构的。
+     * 给你一个二叉树的根节点 root ，按 任意顺序 ，返回所有从根节点到叶子节点的路径。
      *
-     * 如果 s 中的字符可以按某种映射关系替换得到 t ，那么这两个字符串是同构的。
-     *
-     * 每个出现的字符都应当映射到另一个字符，同时不改变字符的顺序。不同字符不能映射到同一个字符上，相同字符只能映射到同一个字符上，字符可以映射到自己本身。
+     * 叶子节点 是指没有子节点的节点。
      *
      *
+     * 示例 1：
      *
-     * 示例 1:
      *
-     * 输入：s = "egg", t = "add"
-     * 输出：true
+     * 输入：root = [1,2,3,null,5]
+     * 输出：["1->2->5","1->3"]
      * 示例 2：
      *
-     * 输入：s = "foo", t = "bar"
-     * 输出：false
-     * 示例 3：
-     *
-     * 输入：s = "paper", t = "title"
-     * 输出：true
-     * @param s
-     * @param t
+     * 输入：root = [1]
+     * 输出：["1"]
+     * @param root
      * @return
-     * 双向一对一
+     *
+     * DFS 深度优先算法
      */
-    public boolean isIsomorphic(String s, String t) {
-        if(s.length()!=t.length()){
-            return false;
-        }
+    public List<String> binaryTreePaths(TreeNode root) {
+        return processNode(root, new ArrayList<>(),new ArrayList<>());
+    }
 
-        Map<Character,Character> mapB2A = new HashMap<>();
-        for(int i=0;i<s.length();i++){
+    public ArrayList<String> processNode(TreeNode node, ArrayList<Integer> holder, ArrayList<String> paths){
+        holder.add(node.val);
 
-            Character a = s.charAt(i);
-            Character b = t.charAt(i);
-
-            if(!mapB2A.containsKey(b)){
-                if(mapB2A.containsValue(a)){
-                    return false;
-                }else {
-                    mapB2A.put(b, a);
-                }
-            }else{
-                Character lastMapping = mapB2A.get(b);
-                if(lastMapping!=a){
-                    return false;
-                }
+        if(node.left==null && node.right==null){
+            //reached end.
+            StringBuilder stringBuilder = new StringBuilder();
+            for(Integer point:holder){
+                stringBuilder.append("->").append(point);
             }
+            paths.add(stringBuilder.substring(2));
+        }else{
+            if(node.left!=null){
+                processNode(node.left, holder, paths);
+            }
+            if(node.right!=null){
+                processNode(node.right, holder, paths);
+            }
+
         }
-        return true;
+
+        holder.remove(holder.size()-1);
+
+        return paths;
+    }
+
+    /**
+     * Definition for a binary tree node.
+     */
+    public static class TreeNode {
+        int val;
+        TreeNode left;
+        TreeNode right;
+
+        TreeNode() {
+        }
+
+        TreeNode(int val) {
+            this.val = val;
+        }
+
+        public TreeNode(int val, TreeNode left, TreeNode right) {
+            this.val = val;
+            this.left = left;
+            this.right = right;
+        }
     }
 
 }
