@@ -3,6 +3,7 @@ package leetcode.simple;
 import javax.swing.tree.TreeNode;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 public class TestJava {
 
@@ -33,33 +34,41 @@ public class TestJava {
      * @param root
      * @return
      *
-     * DFS 深度优先算法
+     * BFS广度优先
      */
     public List<String> binaryTreePaths(TreeNode root) {
-        return processNode(root, new ArrayList<>(),new ArrayList<>());
+        Stack<Object> stack = new Stack<>();
+        stack.add(root);
+        stack.add("");
+
+        List<String> paths = new ArrayList<>();
+
+        while(!stack.isEmpty()){
+            processNode(stack,paths);
+        }
+
+        return paths;
     }
 
-    public ArrayList<String> processNode(TreeNode node, ArrayList<Integer> holder, ArrayList<String> paths){
-        holder.add(node.val);
+    private List<String> processNode(Stack<Object> nodes, List<String> paths){
+        String pathPart = (String) nodes.pop();
+        TreeNode node = (TreeNode) nodes.pop();
 
         if(node.left==null && node.right==null){
-            //reached end.
-            StringBuilder stringBuilder = new StringBuilder();
-            for(Integer point:holder){
-                stringBuilder.append("->").append(point);
-            }
-            paths.add(stringBuilder.substring(2));
+            //create path
+            paths.add(pathPart+node.val);
         }else{
+            pathPart+=node.val+"->";
             if(node.left!=null){
-                processNode(node.left, holder, paths);
+                nodes.add(node.left);
+                nodes.add(pathPart);
             }
             if(node.right!=null){
-                processNode(node.right, holder, paths);
+                nodes.add(node.right);
+                nodes.add(pathPart);
             }
 
         }
-
-        holder.remove(holder.size()-1);
 
         return paths;
     }
