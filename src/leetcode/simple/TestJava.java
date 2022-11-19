@@ -8,7 +8,6 @@ import java.util.Stack;
 public class TestJava {
 
     public static void main(String[] args) throws InterruptedException {
-
         System.out.println(new TestJava().binaryTreePaths(new TreeNode(1, new TreeNode(2, null, new TreeNode(5, null, null)), new TreeNode(3, null, null))));
     }
 
@@ -39,7 +38,8 @@ public class TestJava {
     public List<String> binaryTreePaths(TreeNode root) {
         Stack<Object> stack = new Stack<>();
         stack.add(root);
-        stack.add("");
+        ArrayList<Integer> holder = new ArrayList<Integer>();
+        stack.add(holder);
 
         List<String> paths = new ArrayList<>();
 
@@ -51,21 +51,25 @@ public class TestJava {
     }
 
     private List<String> processNode(Stack<Object> nodes, List<String> paths){
-        String pathPart = (String) nodes.pop();
+        ArrayList<Integer> holder = (ArrayList<Integer>) nodes.pop();
         TreeNode node = (TreeNode) nodes.pop();
-
+        holder.add(node.val);
         if(node.left==null && node.right==null){
             //create path
-            paths.add(pathPart+node.val);
+            StringBuilder stringBuilder = new StringBuilder();
+            for(Integer point:holder){
+                stringBuilder.append("->").append(point);
+            }
+            paths.add(stringBuilder.substring(2));
         }else{
-            pathPart+=node.val+"->";
+
             if(node.left!=null){
                 nodes.add(node.left);
-                nodes.add(pathPart);
+                nodes.add(holder.clone());
             }
             if(node.right!=null){
                 nodes.add(node.right);
-                nodes.add(pathPart);
+                nodes.add(holder.clone());
             }
 
         }
