@@ -7,82 +7,39 @@ import java.util.*;
 public class TestJava {
 
     public static void main(String[] args) throws InterruptedException {
-        System.out.println(new TestJava().wordPattern("abba", "dog cat cat dog"));
+        char[] chars = new char[]{'a','b','c','d'};
+        new TestJava().reverseString(chars);
+        System.out.println(chars);
     }
 
     /**
-     * 290. 单词规律
+     * 344. 反转字符串
      * 简单
-     * 519
+     * 688
      * 相关企业
-     * 给定一种规律 pattern 和一个字符串 s ，判断 s 是否遵循相同的规律。
+     * 编写一个函数，其作用是将输入的字符串反转过来。输入字符串以字符数组 s 的形式给出。
      *
-     * 这里的 遵循 指完全匹配，例如， pattern 里的每个字母和字符串 s 中的每个非空单词之间存在着双向连接的对应规律。
+     * 不要给另外的数组分配额外的空间，你必须原地修改输入数组、使用 O(1) 的额外空间解决这一问题。
      *
      *
      *
-     * 示例1:
+     * 示例 1：
      *
-     * 输入: pattern = "abba", s = "dog cat cat dog"
-     * 输出: true
-     * 示例 2:
+     * 输入：s = ["h","e","l","l","o"]
+     * 输出：["o","l","l","e","h"]
+     * 示例 2：
      *
-     * 输入:pattern = "abba", s = "dog cat cat fish"
-     * 输出: false
-     * 示例 3:
-     *
-     * 输入: pattern = "aaaa", s = "dog cat cat dog"
-     * 输出: false
-     * @param pattern
+     * 输入：s = ["H","a","n","n","a","h"]
+     * 输出：["h","a","n","n","a","H"]
      * @param s
-     * @return
-     * 双指针：s中以单词为单位,pattern中以char为单位。
+     * 双指针相互交换，同时指针靠拢移动。
      */
-    public boolean wordPattern(String pattern, String s) {
-        s = s.trim();
-
-        Map<Character,String> mappings = new HashMap<>();
-
-        for(int i=0,j=0,k=0; j<s.length() || k<pattern.length();){
-
-            if(s.charAt(j)==' '|| j==s.length()-1){
-                String word = s.substring(i, j==s.length()-1?s.length():j);
-                Character c = pattern.charAt(k);
-
-                if (mappings.containsKey(c)) {
-                    if(!mappings.get(c).equals(word)){
-                        return  false;
-                    }
-                }else{
-                    if(mappings.containsValue(word)){
-                        return false;
-                    }
-                }
-                mappings.put(c, word);
-
-
-                if(j==s.length()-1){
-                    //word is done
-                    if(k<pattern.length()-1){
-                        return false;
-                    }
-                }
-                if(k==pattern.length()-1){
-                    //pattern is done
-                    if(j<s.length()-1){
-                        return false;
-                    }
-                }
-
-                k++;
-                i = j+1;
-            }
-
-            j++;
+    public void reverseString(char[] s) {
+        for(int i=0,j=s.length-1;i<j;i++,j--){
+            char temp = s[i];
+            s[i] = s[j];
+            s[j] = temp;
         }
-
-        return true;
-
     }
 
 }
