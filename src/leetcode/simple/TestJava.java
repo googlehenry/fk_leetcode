@@ -1,14 +1,13 @@
 package leetcode.simple;
 
-import java.util.Stack;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class TestJava {
 
     public static void main(String[] args) throws InterruptedException {
-        System.out.println(new TestJava().isPalindrome("a"));
+        System.out.println(new TestJava().isPalindrome("a1ba"));
     }
 
     /**
@@ -46,12 +45,17 @@ public class TestJava {
      */
     public boolean isPalindrome(String s) {
         s = s.toLowerCase();
-        Pattern pattern = Pattern.compile("[a-zA-Z\\d]*");
-        Matcher matcher = pattern.matcher(s);
+        Set<Character> characterSet = new HashSet<>();
+        char[] chars = "abcdefghijklmnopqrstuvwxyz0123456789".toCharArray();
+        for(int i=0;i<chars.length;i++){
+            characterSet.add(chars[i]);
+        }
 
         StringBuilder stringBuilder = new StringBuilder();
-        while(matcher.find()){
-            stringBuilder.append(matcher.group());
+        for(int i=0;i<s.length();i++){
+            if(characterSet.contains(s.charAt(i))){
+                stringBuilder.append(s.charAt(i));
+            }
         }
         s = stringBuilder.toString();
         for(int i=0,j=s.length()-1;i<=j;i++,j--){
