@@ -29,39 +29,23 @@ public class TestJava {
      * @param a
      * @param b
      * @return
+     * 核心思想就是：a+b+进位,然后根据sum确定这一位和新进位的值。
      */
     public String addBinary(String a, String b) {
-        int i=a.length()-1,j=b.length()-1;
         StringBuilder bitsResult = new StringBuilder();
         int borrow = 0;
-        while( i >= 0 || j >= 0){
-            int sumBit = 0;
-            Integer aBit = 0;
-            if(i>=0){
-                aBit = a.charAt(i) - '0';
-            }
-            Integer bBit = 0;
-            if(j>=0){
-                bBit = b.charAt(j) - '0';
-            }
 
-            sumBit = aBit + bBit + borrow;
+        for(int i=a.length()-1, j=b.length()-1; i>=0||j>=0; i--,j--){
+            int sum = borrow;
+            sum += i>=0?a.charAt(i)-'0':0;
+            sum += j>=0?b.charAt(j)-'0':0;
 
-            if(sumBit>=2){
-                borrow = 1;
-            }else{
-                borrow = 0;
-            }
-            sumBit = sumBit % 2;
-
-            bitsResult.append(sumBit);
-
-            j--;
-            i--;
+            bitsResult.append(sum % 2);
+            borrow = sum /2;
         }
-        if(borrow>0) {
-            bitsResult.append(borrow);
-        }
+
+        bitsResult.append(borrow==0?"":borrow);
+
 
         return bitsResult.reverse().toString();
 
