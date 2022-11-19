@@ -38,41 +38,23 @@ public class TestJava {
      * 输出：false
      * @param s
      * @return
+     * 改进版，进去的顺序固定，那么关闭的顺序也决定了。减少判断。
      */
     public boolean isValid(String s) {
         Stack<Character> stack = new Stack<>();
-        if(s.length()%2!=0){
-            return false;
-        }else{
-            for(int i=0;i<s.length();i++){
-                if(stack.isEmpty()){
-                    stack.add(s.charAt(i));
-                }else{
-                    if(validLeft(s.charAt(i))){
-                        stack.add(s.charAt(i));
-                    }else{
-                        //compare if correctly closing
-                        if(!validPair(stack.pop(), s.charAt(i))){
-                            return false;
-                        }
+        for(int i=0;i<s.length();i++){
+            switch(s.charAt(i)){
+                case '(': stack.add(')');break;
+                case '{': stack.add('}');break;
+                case '[': stack.add(']');break;
+                default:{
+                    if(stack.isEmpty()||stack.pop()!=s.charAt(i)){
+                        return false;
                     }
                 }
             }
-            return stack.isEmpty();
         }
-    }
-
-    private boolean validPair(char a,char b){
-        boolean valid = false;
-        switch (a){
-            case '(': valid=b==')';break;
-            case '{': valid=b=='}';break;
-            case '[': valid=b==']';break;
-        }
-        return valid;
-    }
-    private boolean validLeft(char a){
-        return a=='('||a=='{'||a=='[';
+        return stack.isEmpty();
     }
 
 }
