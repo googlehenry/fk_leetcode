@@ -1,80 +1,85 @@
 package leetcode.simple;
 
-import javax.swing.*;
-import javax.swing.tree.TreeNode;
-import java.lang.reflect.Array;
-import java.util.*;
-
 public class TestJava {
 
     public static void main(String[] args) throws InterruptedException {
-        System.out.println(new TestJava().isPathCrossing("NESWW"));
+        ListNode nodeA = new ListNode(1, new ListNode(2,new ListNode(4,null)));
+        ListNode nodeB = new ListNode(1, new ListNode(3,new ListNode(4,null)));
+        System.out.println(new TestJava().mergeTwoLists(nodeA,nodeB));
     }
 
     /**
-     * 1496. 判断路径是否相交
+     * 21. 合并两个有序链表
      * 简单
-     * 41
+     * 2.8K
      * 相关企业
-     * 给你一个字符串 path，其中 path[i] 的值可以是 'N'、'S'、'E' 或者 'W'，分别表示向北、向南、向东、向西移动一个单位。
-     *
-     * 你从二维平面上的原点 (0, 0) 处开始出发，按 path 所指示的路径行走。
-     *
-     * 如果路径在任何位置上与自身相交，也就是走到之前已经走过的位置，请返回 true ；否则，返回 false 。
+     * 将两个升序链表合并为一个新的 升序 链表并返回。新链表是通过拼接给定的两个链表的所有节点组成的。
      *
      *
      *
      * 示例 1：
      *
      *
-     *
-     * 输入：path = "NES"
-     * 输出：false
-     * 解释：该路径没有在任何位置相交。
+     * 输入：l1 = [1,2,4], l2 = [1,3,4]
+     * 输出：[1,1,2,3,4,4]
      * 示例 2：
      *
+     * 输入：l1 = [], l2 = []
+     * 输出：[]
+     * 示例 3：
      *
-     *
-     * 输入：path = "NESWW"
-     * 输出：true
-     * 解释：该路径经过原点两次。
-     * @param path
+     * 输入：l1 = [], l2 = [0]
+     * 输出：[0]
+     * @param list1
+     * @param node2
      * @return
-     * Hash表解决，就是后续位置跟前面重复了。
+     *
+     * 双链表合并一种解法是实质上是把一个链表的数据插入到另一个链表。
      */
-    public boolean isPathCrossing(String path) {
-        Map<Integer,ArrayList<Integer>> pointsMap = new HashMap<>();
+    public ListNode mergeTwoLists(ListNode list1, ListNode node2) {
+        ListNode toBeInsertedNode = list1;
 
-        int x=0,y=0;
+        ListNode newRootList = node2;
 
-        ArrayList<Integer> init = new ArrayList<>();
-        init.add(y);
-        pointsMap.put(0, init);
+        while(toBeInsertedNode!=null){
 
-        for(int i=0;i<path.length();i++){
-            Character action = path.charAt(i);
-            switch (action){
-                case 'N' -> y++;
-                case 'S' -> y--;
-                case 'E' -> x++;
-                default -> x--;
+
+
+            //insert into newRootList
+
+            ListNode findThePointNode = newRootList;
+            ListNode findThePrevNode = null;
+
+            while(findThePointNode != null &&  findThePointNode.val<=toBeInsertedNode.val ){
+                findThePrevNode = findThePointNode;
+                findThePointNode = findThePointNode.next;
             }
 
-            if(pointsMap.containsKey(x)){
-                ArrayList<Integer> ys = pointsMap.get(x)==null?new ArrayList<>():pointsMap.get(x);
-                if(ys.contains(y)){
-                    return true;
-                }else{
-                    ys.add(y);
-                    pointsMap.put(x, ys);
-                }
+            if(findThePrevNode==null){
+                //new head
+                newRootList = new ListNode(toBeInsertedNode.val, findThePointNode);
             }else{
-                ArrayList<Integer> ys = new ArrayList<>();
-                ys.add(y);
-                pointsMap.put(x, ys);
+                //append
+                findThePrevNode.next = new ListNode(toBeInsertedNode.val, findThePointNode);
             }
+
+
+
+            toBeInsertedNode = toBeInsertedNode.next;
         }
-        return false;
+
+
+        return newRootList;
     }
+
+
+    public static class ListNode {
+        int val;
+        ListNode next;
+        ListNode() {}
+        ListNode(int val) { this.val = val; }
+        ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+    }
+
 
 }
