@@ -3,61 +3,56 @@ package leetcode.simple;
 public class TestJava {
 
     public static void main(String[] args) throws InterruptedException {
-        ListNode nodeA = new ListNode(1, new ListNode(2,new ListNode(4,null)));
-        ListNode nodeB = new ListNode(1, new ListNode(3,new ListNode(4,null)));
-        ListNode rs = new TestJava().mergeTwoLists(nodeA,nodeB);
-        System.out.println(rs);
+        System.out.println(new TestJava().maxSubArray(new int[]{-2, 1, -3, 4, -1, 2, 1, -5, 4}));
     }
 
     /**
-     * 21. 合并两个有序链表
-     * 简单
-     * 2.8K
+     * 53. 最大子数组和
+     * 中等
+     * 5.5K
      * 相关企业
-     * 将两个升序链表合并为一个新的 升序 链表并返回。新链表是通过拼接给定的两个链表的所有节点组成的。
+     * 给你一个整数数组 nums ，请你找出一个具有最大和的连续子数组（子数组最少包含一个元素），返回其最大和。
+     *
+     * 子数组 是数组中的一个连续部分。
      *
      *
      *
      * 示例 1：
      *
-     *
-     * 输入：l1 = [1,2,4], l2 = [1,3,4]
-     * 输出：[1,1,2,3,4,4]
+     * 输入：nums = [-2,1,-3,4,-1,2,1,-5,4]
+     * 输出：6
+     * 解释：连续子数组 [4,-1,2,1] 的和最大，为 6 。
      * 示例 2：
      *
-     * 输入：l1 = [], l2 = []
-     * 输出：[]
+     * 输入：nums = [1]
+     * 输出：1
      * 示例 3：
      *
-     * 输入：l1 = [], l2 = [0]
-     * 输出：[0]
-     * @param list1
-     * @param node2
+     * 输入：nums = [5,4,-1,7,8]
+     * 输出：23
+     * @param nums
      * @return
-     *
-     * 递归，两个，比较当前节点大小，根据结果递归设置节点的下一跳为自己的下一跳或者另一个。
+     * 动态规划，子问题最大值，然后再从所有最大值中选取最大值。
      */
-    public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
-        if(list1==null){
-            return list2;
-        }else if(list2==null){
-            return list1;
-        }else if(list1.val<list2.val){
-            list1.next = mergeTwoLists(list1.next, list2);
-            return list1;
-        }else{
-            list2.next = mergeTwoLists(list2.next,list1);
-            return list2;
+    public int maxSubArray(int[] nums) {
+        int[] dps = new int[nums.length];
+        dps[0] = nums[0];
+
+        for(int i=1; i<nums.length;i++){
+            if(dps[i-1]<=0){
+                dps[i] = nums[i];
+            }else {
+                dps[i] = dps[i - 1] + nums[i];
+            }
         }
-    }
 
-
-    public static class ListNode {
-        int val;
-        ListNode next;
-        ListNode() {}
-        ListNode(int val) { this.val = val; }
-        ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+        int max = dps[0];
+        for(int i=0; i<dps.length; i++){
+            if(dps[i]>max){
+                max = dps[i];
+            }
+        }
+        return max;
     }
 
 
