@@ -1,51 +1,52 @@
 package leetcode.simple;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class TestJava {
 
     public static void main(String[] args) throws InterruptedException {
-        System.out.println(new TestJava().maxSubArray(new int[]{-2, 1, -3, 4, -1, 2, 1, -5, 4}));
+        System.out.println(new TestJava().climbStairs(3));
     }
 
     /**
-     * 53. 最大子数组和
-     * 中等
-     * 5.5K
+     * 70. 爬楼梯
+     * 简单
+     * 2.7K
      * 相关企业
-     * 给你一个整数数组 nums ，请你找出一个具有最大和的连续子数组（子数组最少包含一个元素），返回其最大和。
+     * 假设你正在爬楼梯。需要 n 阶你才能到达楼顶。
      *
-     * 子数组 是数组中的一个连续部分。
+     * 每次你可以爬 1 或 2 个台阶。你有多少种不同的方法可以爬到楼顶呢？
      *
      *
      *
      * 示例 1：
      *
-     * 输入：nums = [-2,1,-3,4,-1,2,1,-5,4]
-     * 输出：6
-     * 解释：连续子数组 [4,-1,2,1] 的和最大，为 6 。
+     * 输入：n = 2
+     * 输出：2
+     * 解释：有两种方法可以爬到楼顶。
+     * 1. 1 阶 + 1 阶
+     * 2. 2 阶
      * 示例 2：
      *
-     * 输入：nums = [1]
-     * 输出：1
-     * 示例 3：
-     *
-     * 输入：nums = [5,4,-1,7,8]
-     * 输出：23
-     * @param nums
-     * @return
-     * 动态规划，子问题最大值，然后再从所有最大值中选取最大值。简化。
+     * 输入：n = 3
+     * 输出：3
+     * 解释：有三种方法可以爬到楼顶。
+     * 1. 1 阶 + 1 阶 + 1 阶
+     * 2. 1 阶 + 2 阶
+     * 3. 2 阶 + 1 阶
      */
-    public int maxSubArray(int[] nums) {
+    Map<Integer,Integer> temp = new HashMap<>();
+    public int climbStairs(int n) {
 
-        int max = nums[0];
-
-        int preSum = nums[0];
-
-        for(int i=1; i<nums.length;i++){
-            preSum = Math.max(nums[i],preSum+nums[i]);
-            max = Math.max(max, preSum);
+        if(n==0||n==1){
+            return 1;
+        }else{
+            if(!temp.containsKey(n)){
+                temp.put(n,climbStairs(n-1) + climbStairs(n-2));
+            }
+            return temp.get(n);
         }
-
-        return max;
     }
 
 
