@@ -2,44 +2,78 @@ package leetcode.simple;
 
 import javax.swing.*;
 import javax.swing.tree.TreeNode;
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class TestJava {
 
     public static void main(String[] args) throws InterruptedException {
-        char[] chars = new char[]{'a','b','c','d'};
-        new TestJava().reverseString(chars);
-        System.out.println(chars);
+        System.out.println(new TestJava().isPathCrossing("NESWW"));
     }
 
     /**
-     * 344. 反转字符串
+     * 1496. 判断路径是否相交
      * 简单
-     * 688
+     * 41
      * 相关企业
-     * 编写一个函数，其作用是将输入的字符串反转过来。输入字符串以字符数组 s 的形式给出。
+     * 给你一个字符串 path，其中 path[i] 的值可以是 'N'、'S'、'E' 或者 'W'，分别表示向北、向南、向东、向西移动一个单位。
      *
-     * 不要给另外的数组分配额外的空间，你必须原地修改输入数组、使用 O(1) 的额外空间解决这一问题。
+     * 你从二维平面上的原点 (0, 0) 处开始出发，按 path 所指示的路径行走。
+     *
+     * 如果路径在任何位置上与自身相交，也就是走到之前已经走过的位置，请返回 true ；否则，返回 false 。
      *
      *
      *
      * 示例 1：
      *
-     * 输入：s = ["h","e","l","l","o"]
-     * 输出：["o","l","l","e","h"]
+     *
+     *
+     * 输入：path = "NES"
+     * 输出：false
+     * 解释：该路径没有在任何位置相交。
      * 示例 2：
      *
-     * 输入：s = ["H","a","n","n","a","h"]
-     * 输出：["h","a","n","n","a","H"]
-     * @param s
-     * 双指针相互交换，同时指针靠拢移动。
+     *
+     *
+     * 输入：path = "NESWW"
+     * 输出：true
+     * 解释：该路径经过原点两次。
+     * @param path
+     * @return
      */
-    public void reverseString(char[] s) {
-        for(int i=0,j=s.length-1;i<j;i++,j--){
-            char temp = s[i];
-            s[i] = s[j];
-            s[j] = temp;
+    public boolean isPathCrossing(String path) {
+        Map<Integer,ArrayList<Integer>> pointsMap = new HashMap<>();
+
+        int x=0,y=0;
+
+        ArrayList<Integer> init = new ArrayList<>();
+        init.add(y);
+        pointsMap.put(0, init);
+
+        for(int i=0;i<path.length();i++){
+            Character action = path.charAt(i);
+            switch (action){
+                case 'N' -> y++;
+                case 'S' -> y--;
+                case 'E' -> x++;
+                default -> x--;
+            }
+
+            if(pointsMap.containsKey(x)){
+                ArrayList<Integer> ys = pointsMap.get(x)==null?new ArrayList<>():pointsMap.get(x);
+                if(ys.contains(y)){
+                    return true;
+                }else{
+                    ys.add(y);
+                    pointsMap.put(x, ys);
+                }
+            }else{
+                ArrayList<Integer> ys = new ArrayList<>();
+                ys.add(y);
+                pointsMap.put(x, ys);
+            }
         }
+        return false;
     }
 
 }
