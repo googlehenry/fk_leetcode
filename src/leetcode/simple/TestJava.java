@@ -40,6 +40,7 @@ public class TestJava {
      * 解释：该路径经过原点两次。
      * @param path
      * @return
+     * Hash表解决，就是后续位置跟前面重复了。
      */
     public boolean isPathCrossing(String path) {
         Map<Integer,ArrayList<Integer>> pointsMap = new HashMap<>();
