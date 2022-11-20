@@ -5,7 +5,8 @@ public class TestJava {
     public static void main(String[] args) throws InterruptedException {
         ListNode nodeA = new ListNode(1, new ListNode(2,new ListNode(4,null)));
         ListNode nodeB = new ListNode(1, new ListNode(3,new ListNode(4,null)));
-        System.out.println(new TestJava().mergeTwoLists(nodeA,nodeB));
+        ListNode rs = new TestJava().mergeTwoLists(nodeA,nodeB);
+        System.out.println(rs);
     }
 
     /**
@@ -34,42 +35,20 @@ public class TestJava {
      * @param node2
      * @return
      *
-     * 双链表合并一种解法是实质上是把一个链表的数据插入到另一个链表。
+     * 递归，两个，比较当前节点大小，根据结果递归设置节点的下一跳为自己的下一跳或者另一个。
      */
-    public ListNode mergeTwoLists(ListNode list1, ListNode node2) {
-        ListNode toBeInsertedNode = list1;
-
-        ListNode newRootList = node2;
-
-        while(toBeInsertedNode!=null){
-
-
-
-            //insert into newRootList
-
-            ListNode findThePointNode = newRootList;
-            ListNode findThePrevNode = null;
-
-            while(findThePointNode != null &&  findThePointNode.val<=toBeInsertedNode.val ){
-                findThePrevNode = findThePointNode;
-                findThePointNode = findThePointNode.next;
-            }
-
-            if(findThePrevNode==null){
-                //new head
-                newRootList = new ListNode(toBeInsertedNode.val, findThePointNode);
-            }else{
-                //append
-                findThePrevNode.next = new ListNode(toBeInsertedNode.val, findThePointNode);
-            }
-
-
-
-            toBeInsertedNode = toBeInsertedNode.next;
+    public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
+        if(list1==null){
+            return list2;
+        }else if(list2==null){
+            return list1;
+        }else if(list1.val<list2.val){
+            list1.next = mergeTwoLists(list1.next, list2);
+            return list1;
+        }else{
+            list2.next = mergeTwoLists(list2.next,list1);
+            return list2;
         }
-
-
-        return newRootList;
     }
 
 
