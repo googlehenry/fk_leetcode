@@ -35,23 +35,16 @@ public class TestJava {
      * 动态规划，子问题最大值，然后再从所有最大值中选取最大值。
      */
     public int maxSubArray(int[] nums) {
-        int[] dps = new int[nums.length];
-        dps[0] = nums[0];
+
+        int max = nums[0];
+
+        int preSum = 0;
 
         for(int i=1; i<nums.length;i++){
-            if(dps[i-1]<=0){
-                dps[i] = nums[i];
-            }else {
-                dps[i] = dps[i - 1] + nums[i];
-            }
+            preSum = Math.max(nums[i],preSum+nums[i]);
+            max = Math.max(max, preSum);
         }
 
-        int max = dps[0];
-        for(int i=0; i<dps.length; i++){
-            if(dps[i]>max){
-                max = dps[i];
-            }
-        }
         return max;
     }
 
