@@ -1,53 +1,75 @@
 package leetcode.simple;
 
+import javax.swing.tree.TreeNode;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Stack;
 
 public class TestJava {
 
     public static void main(String[] args) throws InterruptedException {
-        System.out.println(new TestJava().climbStairs(3));
+        System.out.println(new TestJava().isSymmetric(new TreeNode(2)));
     }
 
     /**
-     * 70. 爬楼梯
+     * 101. 对称二叉树
      * 简单
-     * 2.7K
+     * 2.2K
      * 相关企业
-     * 假设你正在爬楼梯。需要 n 阶你才能到达楼顶。
-     *
-     * 每次你可以爬 1 或 2 个台阶。你有多少种不同的方法可以爬到楼顶呢？
+     * 给你一个二叉树的根节点 root ， 检查它是否轴对称。
      *
      *
      *
      * 示例 1：
      *
-     * 输入：n = 2
-     * 输出：2
-     * 解释：有两种方法可以爬到楼顶。
-     * 1. 1 阶 + 1 阶
-     * 2. 2 阶
+     *
+     * 输入：root = [1,2,2,3,4,4,3]
+     * 输出：true
      * 示例 2：
      *
-     * 输入：n = 3
-     * 输出：3
-     * 解释：有三种方法可以爬到楼顶。
-     * 1. 1 阶 + 1 阶 + 1 阶
-     * 2. 1 阶 + 2 阶
-     * 3. 2 阶 + 1 阶
+     *
+     * 输入：root = [1,2,2,null,3,null,3]
+     * 输出：false
+     * @param root
+     * @return
+     * 那就是左右2棵树比较。
      */
-    Map<Integer,Integer> temp = new HashMap<>();
-    public int climbStairs(int n) {
+    public boolean isSymmetric(TreeNode root) {
+        return compareNodes(root.left,root.right);
+    }
 
-        if(n==0||n==1){
-            return 1;
+    private boolean compareNodes(TreeNode left,TreeNode right){
+        if(left==null && right==null){
+            return true;
+        }else if(left==null || right==null){
+            return false;
+        }else if(left.val!=right.val){
+            return false;
         }else{
-            if(!temp.containsKey(n)){
-                temp.put(n,climbStairs(n-1) + climbStairs(n-2));
-            }
-            return temp.get(n);
+            return compareNodes(left.left,right.right) && compareNodes(left.right,right.left);
         }
     }
 
+
+
+    public static class TreeNode {
+        int val;
+        TreeNode left;
+        TreeNode right;
+
+        TreeNode() {
+        }
+
+        TreeNode(int val) {
+            this.val = val;
+        }
+
+        TreeNode(int val, TreeNode left, TreeNode right) {
+            this.val = val;
+            this.left = left;
+            this.right = right;
+        }
+    }
 
 }
