@@ -32,13 +32,13 @@ public class TestJava {
      * 输出：23
      * @param nums
      * @return
-     * 动态规划，子问题最大值，然后再从所有最大值中选取最大值。
+     * 动态规划，子问题最大值，然后再从所有最大值中选取最大值。简化。
      */
     public int maxSubArray(int[] nums) {
 
         int max = nums[0];
 
-        int preSum = 0;
+        int preSum = nums[0];
 
         for(int i=1; i<nums.length;i++){
             preSum = Math.max(nums[i],preSum+nums[i]);
