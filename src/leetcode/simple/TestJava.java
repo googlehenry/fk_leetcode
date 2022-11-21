@@ -1,55 +1,46 @@
 package leetcode.simple;
 
 import javax.swing.tree.TreeNode;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Stack;
+import java.lang.reflect.Array;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class TestJava {
 
     public static void main(String[] args) throws InterruptedException {
-        System.out.println(new TestJava().isSymmetric(new TreeNode(2)));
+
+        try{
+            throw new Error("testing");
+        }catch (Throwable t){
+            t.printStackTrace();
+        }
+        System.out.println(new TestJava().bfs(new TreeNode(1,new TreeNode(2,new TreeNode(4),null),new TreeNode(3,new TreeNode(5, new TreeNode(7),new TreeNode(8)),new TreeNode(6)))));
     }
 
     /**
-     * 101. 对称二叉树
-     * 简单
-     * 2.2K
-     * 相关企业
-     * 给你一个二叉树的根节点 root ， 检查它是否轴对称。
-     *
-     *
-     *
-     * 示例 1：
-     *
-     *
-     * 输入：root = [1,2,2,3,4,4,3]
-     * 输出：true
-     * 示例 2：
-     *
-     *
-     * 输入：root = [1,2,2,null,3,null,3]
-     * 输出：false
-     * @param root
-     * @return
-     * 那就是左右2棵树比较。
+     * BFS
      */
-    public boolean isSymmetric(TreeNode root) {
-        return compareNodes(root.left,root.right);
+    public boolean bfs(TreeNode root) {
+        Queue<TreeNode> nodes = new LinkedList<>();
+        nodes.add(root);
+
+        ArrayList<TreeNode> rsNodes = new ArrayList<>();
+        while(!nodes.isEmpty()){
+            TreeNode head = nodes.poll();
+            rsNodes.add(head);
+            if(head.left!=null){
+                nodes.add(head.left);
+            }
+            if(head.right!=null){
+                nodes.add(head.right);
+            }
+        }
+
+        return rsNodes.isEmpty();
+
     }
 
-    private boolean compareNodes(TreeNode left,TreeNode right){
-        if(left==null && right==null){
-            return true;
-        }else if(left==null || right==null){
-            return false;
-        }else if(left.val!=right.val){
-            return false;
-        }else{
-            return compareNodes(left.left,right.right) && compareNodes(left.right,right.left);
-        }
-    }
 
 
 
