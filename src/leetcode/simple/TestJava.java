@@ -1,54 +1,90 @@
 package leetcode.simple;
 
+import java.time.Year;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Stack;
 
 public class TestJava {
 
     public static void main(String[] args) throws InterruptedException {
-        System.out.println(new TestJava().addTwoNumbers(new ListNode(2, new ListNode(4, new ListNode(3))), new ListNode(5, new ListNode(6, new ListNode(4)))));
+        System.out.println(new TestJava().longestPalindrome("babad"));
     }
 
     /**
-     * 2. 两数相加
+     * 5. 最长回文子串
      * 中等
-     * 8.9K
+     * 5.9K
      * 相关企业
-     * 给你两个 非空 的链表，表示两个非负的整数。它们每位数字都是按照 逆序 的方式存储的，并且每个节点只能存储 一位 数字。
+     * 给你一个字符串 s，找到 s 中最长的回文子串。
      *
-     * 请你将两个数相加，并以相同形式返回一个表示和的链表。
      *
-     * 你可以假设除了数字 0 之外，这两个数都不会以 0 开头。
-     * @param l1
-     * @param l2
+     *
+     * 示例 1：
+     *
+     * 输入：s = "babad"
+     * 输出："bab"
+     * 解释："aba" 同样是符合题意的答案。
+     * 示例 2：
+     *
+     * 输入：s = "cbbd"
+     * 输出："bb"
+     * @param s
      * @return
+     * 中心扩展法
      */
-    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
-        Integer carry = 0;
+    public String longestPalindrome(String s) {
+        String maxString = String.valueOf(s.charAt(0));
 
-        ListNode rs = new ListNode();
-        doAdd(l1,l2, carry, rs);
+        for(int cur=0;cur<s.length();cur++){
+            boolean expanded = false;
+            for(int prev=cur,next=cur;prev>=0 && next<s.length();){
+                if(!expanded && (prev-1)>=0 && s.charAt(cur)==s.charAt(prev-1)){
+                    prev--;
+                    if(next+1-prev>maxString.length()){
+                        maxString = s.substring(prev,next+1);
+                    }
+                }else if(!expanded && (next+1)<s.length() && s.charAt(cur)==s.charAt(next+1)){
+                    next++;
+                    if(next+1-prev>maxString.length()){
+                        maxString = s.substring(prev,next+1);
+                    }
+                }else if((prev-1)>=0 && (next+1)<s.length() && s.charAt(prev-1)==s.charAt(next+1)){
+                    prev--;
+                    next++;
+                    if(next+1-prev>maxString.length()){
+                        maxString = s.substring(prev,next+1);
+                    }
+                    expanded = true;
+                }else{
+                    break;
+                }
 
-
-        return rs.next;
+            }
+        }
+        return maxString;
     }
 
-    private void doAdd(ListNode l1, ListNode l2, Integer carry, ListNode rs){
-        int sumBit = carry;
 
-        if(l1==null&&l2==null && carry==0){
-            return;
-        }
-        if(l1!=null){
-            sumBit+=l1.val;
-        }
-        if(l2!=null){
-            sumBit+=l2.val;
-        }
-        carry = sumBit/10;
-        rs.next = new ListNode(sumBit%10);
-        doAdd(l1==null?null:l1.next,l2==null?null:l2.next,carry,rs.next);
-    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     public static class ListNode {
