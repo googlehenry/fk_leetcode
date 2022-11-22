@@ -8,7 +8,7 @@ import java.util.Stack;
 public class TestJava {
 
     public static void main(String[] args) throws InterruptedException {
-        System.out.println(new TestJava().longestPalindrome("babad"));
+        System.out.println(new TestJava().longestPalindrome("aabbbc"));
     }
 
     /**
@@ -31,49 +31,37 @@ public class TestJava {
      * 输出："bb"
      * @param s
      * @return
-     * 中心扩展法
+     * 动态规划：长度为1的回文串，长度为2的回文串，长度为N的回文串=长度为(N-1)的回文串&&两边的值是否相等。
      */
     public String longestPalindrome(String s) {
-        String maxString = String.valueOf(s.charAt(0));
-
-        for(int cur=0;cur<s.length();cur++){
-            boolean expanded = false;
-            for(int prev=cur,next=cur;prev>=0 && next<s.length();){
-                if(!expanded && (prev-1)>=0 && s.charAt(cur)==s.charAt(prev-1)){
-                    prev--;
-                    if(next+1-prev>maxString.length()){
-                        maxString = s.substring(prev,next+1);
-                    }
-                }else if(!expanded && (next+1)<s.length() && s.charAt(cur)==s.charAt(next+1)){
-                    next++;
-                    if(next+1-prev>maxString.length()){
-                        maxString = s.substring(prev,next+1);
-                    }
-                }else if((prev-1)>=0 && (next+1)<s.length() && s.charAt(prev-1)==s.charAt(next+1)){
-                    prev--;
-                    next++;
-                    if(next+1-prev>maxString.length()){
-                        maxString = s.substring(prev,next+1);
-                    }
-                    expanded = true;
-                }else{
-                    break;
+        int strLen = s.length();
+        String string = String.valueOf(s.charAt(0));
+        boolean[][] rs = new boolean[strLen][strLen];
+        for(int i=0;i<strLen;i++){
+            rs[i][i] = true;
+            if(i+1<strLen) {
+                rs[i][i + 1] = s.charAt(i)==s.charAt(i+1);
+                if(rs[i][i+1] && 2>string.length()){
+                    string = s.substring(i,i+1+1);
                 }
-
             }
         }
-        return maxString;
+
+        for(int len=3; len<=strLen;len++){
+            for(int i=0;i<strLen;i++){
+                int j = i+len-1;
+                if(j<strLen){
+                    rs[i][j] = rs[i+1][j-1] && s.charAt(i)==s.charAt(j);
+                    if(rs[i][j] && (j+1-i)>string.length()){
+                        string = s.substring(i,j+1);
+                    }
+                }
+            }
+        }
+
+
+        return string;
     }
-
-
-
-
-
-
-
-
-
-
 
 
 
