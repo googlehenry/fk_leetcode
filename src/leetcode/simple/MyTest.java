@@ -1,74 +1,86 @@
 package leetcode.simple;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class MyTest {
 
     public static void main(String[] args) {
-        System.out.println(new MyTest().convert("ABC",2));
+        System.out.println(new MyTest().threeSum(new int[]{-4,-2,-2,-2,0,1,2,2,2,3,3,4,4,6,6}));
     }
 
     /**
-     * 6. Z 字形变换
+     * 15. 三数之和
      * 中等
-     * 1.9K
+     * 5.4K
      * 相关企业
-     * 将一个给定字符串 s 根据给定的行数 numRows ，以从上往下、从左到右进行 Z 字形排列。
+     * 给你一个整数数组 nums ，判断是否存在三元组 [nums[i], nums[j], nums[k]] 满足 i != j、i != k 且 j != k ，同时还满足 nums[i] + nums[j] + nums[k] == 0 。请
      *
-     * 比如输入字符串为 "PAYPALISHIRING" 行数为 3 时，排列如下：
+     * 你返回所有和为 0 且不重复的三元组。
      *
-     * P   A   H   N
-     * A P L S I I G
-     * Y   I   R
-     * 之后，你的输出需要从左往右逐行读取，产生出一个新的字符串，比如："PAHNAPLSIIGYIR"。
+     * 注意：答案中不可以包含重复的三元组。
      *
-     * 请你实现这个将字符串进行指定行数变换的函数：
      *
-     * string convert(string s, int numRows);
+     *
      *
      *
      * 示例 1：
      *
-     * 输入：s = "PAYPALISHIRING", numRows = 3
-     * 输出："PAHNAPLSIIGYIR"
-     * 示例 2：
-     * 输入：s = "PAYPALISHIRING", numRows = 4
-     * 输出："PINALSIGYAHRPI"
+     * 输入：nums = [-1,0,1,2,-1,-4]
+     * 输出：[[-1,-1,2],[-1,0,1]]
      * 解释：
-     * P     I    N
-     * A   L S  I G
-     * Y A   H R
-     * P     I
+     * nums[0] + nums[1] + nums[2] = (-1) + 0 + 1 = 0 。
+     * nums[1] + nums[2] + nums[4] = 0 + 1 + (-1) = 0 。
+     * nums[0] + nums[3] + nums[4] = (-1) + 2 + (-1) = 0 。
+     * 不同的三元组是 [-1,0,1] 和 [-1,-1,2] 。
+     * 注意，输出的顺序和三元组的顺序并不重要。
+     * 示例 2：
+     *
+     * 输入：nums = [0,1,1]
+     * 输出：[]
+     * 解释：唯一可能的三元组和不为 0 。
      * 示例 3：
      *
-     * 输入：s = "A", numRows = 1
-     * 输出："A"
-     * @param s
-     * @param numRows
+     * 输入：nums = [0,0,0]
+     * 输出：[[0,0,0]]
+     * 解释：唯一可能的三元组和为 0 。
+     * @param nums
      * @return
-     *
-     * 利用字符串优化，给每一个位上的char找行，append排布
+     * 排序+双指针。根据三数和移动指针
      */
-    public String convert(String s, int numRows) {
-        String[] rows = new String[numRows];
+    public List<List<Integer>> threeSum(int[] nums) {
+        //1正+2负
+        //1负+2正
+        //0算正
+        Arrays.sort(nums);
+        Set<String> set = new HashSet<>();
+        List<List<Integer>> groups = new ArrayList<>();
+        for(int i=0;i<nums.length;i++){
+            int x = i+1;
+            int y = nums.length - 1;
 
-        if(numRows==1) return s;
 
-        int row = 0;
-        boolean asc = false;
-        for(int i=0;i<s.length();i++){
-            //find row, append
-            if(row==0||row==numRows-1){
-                asc = !asc;
+
+            while(y>x){
+
+                int sum = nums[i]+nums[x]+nums[y];
+                if(sum==0){
+                    if(!set.contains(""+nums[i]+nums[x]+nums[y])){
+                        groups.add(Arrays.asList(nums[i],nums[x],nums[y]));
+                        set.add(""+nums[i]+nums[x]+nums[y]);
+                    }
+                    x++;
+                    y--;
+                }else if(sum>0){
+                    y--;
+                }else{
+                    x++;
+                }
             }
-            rows[row]= rows[row]==null?""+s.charAt(i):rows[row]+s.charAt(i);
-            row+=asc?1:-1;
+
         }
-        StringBuilder stringBuilder = new StringBuilder();
-        for(int i=0;i<rows.length;i++){
-            stringBuilder.append(rows[i]==null?"":rows[i]);
-        }
-        return  stringBuilder.toString();
+
+        return groups;
     }
 
 }
