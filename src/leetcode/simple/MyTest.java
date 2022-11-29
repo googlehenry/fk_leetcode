@@ -5,7 +5,7 @@ import java.util.*;
 public class MyTest {
 
     public static void main(String[] args) {
-        System.out.println(new MyTest().convert("AB",1));
+        System.out.println(new MyTest().convert("ABC",2));
     }
 
     /**
@@ -47,41 +47,37 @@ public class MyTest {
      * @param numRows
      * @return
      *
-     * 利用二位表暴力排布
+     * 利用字符串优化，给每一个位上的char找行，append排布
      */
     public String convert(String s, int numRows) {
-        Character[][] arrs = new Character[numRows][s.length()];
+        String[] rows = new String[numRows];
+
         int row = 0;
-        int col = 0;
-        int step = 1;
-        int idx = 0;
-        while(idx<s.length()){
-            arrs[row][col] = s.charAt(idx);
-
+        boolean asc = true;
+        for(int i=0;i<s.length();i++){
+            //find row, append
             if(numRows==1){
-                step = 0;
-                col++;
+                row = row;
+                rows[row]= rows[row]==null?""+s.charAt(i):rows[row]+s.charAt(i);
+            }else{
+                if(row==0){
+                    asc = true;
+                }else if(row==numRows-1){
+                    asc = false;
+                }
+                rows[row]= rows[row]==null?""+s.charAt(i):rows[row]+s.charAt(i);
+                if(asc){
+                    row++;
+                }else{
+                    row--;
+                }
             }
-            else if(row==numRows-1){
-                step = -1;
-                col++;
-            }else if(row==0){
-                step = 1;
-                col++;
-            }
-            row += step;
-            idx++;
         }
-
         StringBuilder stringBuilder = new StringBuilder();
-        for(int i=0;i<numRows;i++){
-            for(int j=0;j<s.length();j++){
-                if(arrs[i][j]!=null) stringBuilder.append(arrs[i][j]);
-            }
+        for(int i=0;i<rows.length;i++){
+            stringBuilder.append(rows[i]==null?"":rows[i]);
         }
-
-        return stringBuilder.toString();
-
+        return  stringBuilder.toString();
     }
 
 }
