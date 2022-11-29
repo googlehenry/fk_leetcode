@@ -35,10 +35,11 @@ public class MyTest {
      *      请注意，你的答案必须是 子串 的长度，"pwke" 是一个子序列，不是子串。
      * @param s
      * @return
+     * 双指针
      */
     public int lengthOfLongestSubstring(String s) {
         int i=0,j=0;
-        int maxLength = 1;
+        int maxLength = 0;
         String maxString = String.valueOf(s.charAt(0));
         while(i<s.length()&&j<s.length()){
             boolean isQUalified = true;
