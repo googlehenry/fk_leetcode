@@ -35,35 +35,29 @@ public class MyTest {
      *      请注意，你的答案必须是 子串 的长度，"pwke" 是一个子序列，不是子串。
      * @param s
      * @return
-     * 双指针
+     * 双指针+Map因为区间无重复,但是注意map可能有之前的数据，所以需要动态计算maxlen
      */
     public int lengthOfLongestSubstring(String s) {
         int i=0,j=0;
-        int maxLength = 0;
-        String maxString = String.valueOf(s.charAt(0));
+        Map<Character,Integer> windowMap = new HashMap<>();
+        int len = 0;
         while(i<s.length()&&j<s.length()){
-            boolean isQUalified = true;
-            for(int i1 = i;i1<j;i1++){
-                if(s.charAt(j)==s.charAt(i1)){
-                    isQUalified = false;
-                }
-            }
-
-            if(isQUalified){
-                if(maxLength<j-i+1) {
-                    maxLength = j - i + 1;
-                    maxString = s.substring(i,j+1);
-                }
+            if(windowMap.containsKey(s.charAt(j))){
+                i = Math.max(i,windowMap.get(s.charAt(j)) + 1);
+                len=Math.max(len,j-i+1);
+                windowMap.put(s.charAt(j),j);
                 j++;
             }else{
-                i++;
+                windowMap.put(s.charAt(j),j);
+                len=Math.max(len,j-i+1);
+                j++;
             }
 
         }
 
-        System.out.println(maxString);
+        System.out.println(windowMap);
 
-        return maxLength;
+        return len;
     }
 
 
