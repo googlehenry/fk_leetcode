@@ -5,60 +5,62 @@ import java.util.*;
 public class MyTest {
 
     public static void main(String[] args) {
-        System.out.println(new MyTest().lengthOfLongestSubstring("pwwkew"));
+        System.out.println(new MyTest().findMedianSortedArrays(new int[]{1,3},new int[]{2}));
     }
 
     /**
-     * 3. 无重复字符的最长子串
-     * 中等
-     * 8.5K
+     * 4. 寻找两个正序数组的中位数
+     * 困难
+     * 6.1K
      * 相关企业
-     * 给定一个字符串 s ，请你找出其中不含有重复字符的 最长子串 的长度。
+     * 给定两个大小分别为 m 和 n 的正序（从小到大）数组 nums1 和 nums2。请你找出并返回这两个正序数组的 中位数 。
+     *
+     * 算法的时间复杂度应该为 O(log (m+n)) 。
      *
      *
      *
-     * 示例 1:
+     * 示例 1：
      *
-     * 输入: s = "abcabcbb"
-     * 输出: 3
-     * 解释: 因为无重复字符的最长子串是 "abc"，所以其长度为 3。
-     * 示例 2:
+     * 输入：nums1 = [1,3], nums2 = [2]
+     * 输出：2.00000
+     * 解释：合并数组 = [1,2,3] ，中位数 2
+     * 示例 2：
      *
-     * 输入: s = "bbbbb"
-     * 输出: 1
-     * 解释: 因为无重复字符的最长子串是 "b"，所以其长度为 1。
-     * 示例 3:
-     *
-     * 输入: s = "pwwkew"
-     * 输出: 3
-     * 解释: 因为无重复字符的最长子串是 "wke"，所以其长度为 3。
-     *      请注意，你的答案必须是 子串 的长度，"pwke" 是一个子序列，不是子串。
-     * @param s
+     * 输入：nums1 = [1,2], nums2 = [3,4]
+     * 输出：2.50000
+     * 解释：合并数组 = [1,2,3,4] ，中位数 (2 + 3) / 2 = 2.5
+     * @param nums1
+     * @param nums2
      * @return
-     * 双指针+Map因为区间无重复,但是注意map可能有之前的数据，所以需要动态计算maxlen
+     * 忽略复杂度：合并数组再找中位数，复杂度(M+N)
      */
-    public int lengthOfLongestSubstring(String s) {
-        int i=0,j=0;
-        Map<Character,Integer> windowMap = new HashMap<>();
-        int len = 0;
-        while(i<s.length()&&j<s.length()){
-            if(windowMap.containsKey(s.charAt(j))){
-                i = Math.max(i,windowMap.get(s.charAt(j)) + 1);
-                len=Math.max(len,j-i+1);
-                windowMap.put(s.charAt(j),j);
-                j++;
-            }else{
-                windowMap.put(s.charAt(j),j);
-                len=Math.max(len,j-i+1);
-                j++;
+    public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+        //归并
+        int[] merge = new int[nums1.length+nums2.length];
+
+        int i = 0;
+        int j = 0;
+        int m = 0;
+        while(i<nums1.length || j<nums2.length){
+            if(i<nums1.length&&j<nums2.length){
+                if(nums1[i]<=nums2[j]){
+                    merge[m++] = nums1[i++];
+                }else{
+                    merge[m++] = nums2[j++];
+                }
+            }else if(i<nums1.length){
+                merge[m++] = nums1[i++];
+            }else if(j<nums2.length){
+                merge[m++] = nums2[j++];
             }
 
         }
 
-        System.out.println(windowMap);
-
-        return len;
+        if(merge.length%2==0){
+            return (merge[merge.length/2-1]+merge[merge.length/2])/2.0;
+        }else{
+            return merge[merge.length/2];
+        }
     }
-
 
 }
