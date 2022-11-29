@@ -52,26 +52,17 @@ public class MyTest {
     public String convert(String s, int numRows) {
         String[] rows = new String[numRows];
 
+        if(numRows==1) return s;
+
         int row = 0;
-        boolean asc = true;
+        boolean asc = false;
         for(int i=0;i<s.length();i++){
             //find row, append
-            if(numRows==1){
-                row = row;
-                rows[row]= rows[row]==null?""+s.charAt(i):rows[row]+s.charAt(i);
-            }else{
-                if(row==0){
-                    asc = true;
-                }else if(row==numRows-1){
-                    asc = false;
-                }
-                rows[row]= rows[row]==null?""+s.charAt(i):rows[row]+s.charAt(i);
-                if(asc){
-                    row++;
-                }else{
-                    row--;
-                }
+            if(row==0||row==numRows-1){
+                asc = !asc;
             }
+            rows[row]= rows[row]==null?""+s.charAt(i):rows[row]+s.charAt(i);
+            row+=asc?1:-1;
         }
         StringBuilder stringBuilder = new StringBuilder();
         for(int i=0;i<rows.length;i++){
