@@ -38,6 +38,7 @@ public class MyTest {
         //归并
         int[] merge = new int[nums1.length+nums2.length];
 
+        int earlyEndIdx = merge.length/2+1;//odd and even
         int i = 0;
         int j = 0;
         int m = 0;
@@ -54,6 +55,10 @@ public class MyTest {
                 merge[m++] = nums2[j++];
             }
 
+            //(m+n)/2,how to make it logn?
+            if(m>earlyEndIdx){
+                break;
+            }
         }
 
         if(merge.length%2==0){
