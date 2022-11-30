@@ -36,20 +36,22 @@ public class MyTest {
      输入：height = [1,1]
      输出：1
 
-     //暴力计算面积：= (下标2-下标1)*Min(Heigh1,Height2)
+     //双指针计算面积：如果左边小，则左边加一才能获得更大的面积。右边小，则右移才能获得更大的面积。
      */
     public int maxArea(int[] height) {
 
         int maxArea = 0;
-        for(int i=0;i<height.length;i++){
-            for(int j=i+1;j<height.length;j++){
-                //calculate area and compare
-                int w = j-i;
-                int h = Math.min(height[i],height[j]);
-                int area = w*h;
-                if(area>maxArea){
-                    maxArea = area;
-                }
+        int left = 0;
+        int right = height.length-1;
+        while(left<right){
+            int area = (right-left)*Math.min(height[left],height[right]);
+            if(area>maxArea){
+                maxArea = area;
+            }
+            if(height[left]<=height[right]){
+                left++;
+            }else{
+                right--;
             }
         }
 
