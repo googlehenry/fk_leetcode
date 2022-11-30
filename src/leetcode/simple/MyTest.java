@@ -8,57 +8,56 @@ import java.util.jar.JarEntry;
 public class MyTest {
 
     public static void main(String[] args) {
-        System.out.println(new MyTest().trap(new int[]{4,2,0,3,2,5}));
+        ListNode rs = new MyTest().swapPairs(new ListNode(1,new ListNode(2,new ListNode(3,new ListNode(4,null)))));
+        System.out.println(rs);
     }
 
     /**
-     * 42. 接雨水
-     * 困难
-     * 4K
+     * 24. 两两交换链表中的节点
+     * 中等
+     * 1.6K
      * 相关企业
-     * 给定 n 个非负整数表示每个宽度为 1 的柱子的高度图，计算按此排列的柱子，下雨之后能接多少雨水。
+     * 给你一个链表，两两交换其中相邻的节点，并返回交换后链表的头节点。你必须在不修改节点内部的值的情况下完成本题（即，只能进行节点交换）。
      *
      *
      *
      * 示例 1：
      *
      *
-     *
-     * 输入：height = [0,1,0,2,1,0,1,3,2,1,2,1]
-     * 输出：6
-     * 解释：上面是由数组 [0,1,0,2,1,0,1,3,2,1,2,1] 表示的高度图，在这种情况下，可以接 6 个单位的雨水（蓝色部分表示雨水）。
+     * 输入：head = [1,2,3,4]
+     * 输出：[2,1,4,3]
      * 示例 2：
      *
-     * 输入：height = [4,2,0,3,2,5]
-     * 输出：9
-     * @param height
+     * 输入：head = []
+     * 输出：[]
+     * 示例 3：
+     *
+     * 输入：head = [1]
+     * 输出：[1]
+     * @param head
      * @return
-     * 求每一个列能收集的水，min(maxLeft,maxRight)-height(i)
-     * 使用动态规划计算每一位的maxLeft和maxRight.降低复杂度到O(n)
-     * 利用双指针计算进一步降低时空复杂度。
+     * 链表很关键的是当前节点值，看看处理单位是一个元素一组还是2个。
      */
-    public int trap(int[] height) {
+    public ListNode swapPairs(ListNode head) {
+        if(head==null) return null;
+        if(head.next==null) return head;
 
-        if(height.length<=2)return 0;
-        int sum = 0;
-        int L = 0;
-        int R = height.length - 1;
-        int maxL = 0;
-        int maxR = 0;
-        while(L<R){
-            maxL = Math.max(maxL,height[L]);
-            maxR = Math.max(maxR,height[R]);
+        ListNode newHead = head.next.next;
+        ListNode a = head;
+        ListNode b = head.next;
 
-            if(maxL<maxR){
-                sum += maxL - height[L];
-                L++;
-            }else{
-                sum += maxR - height[R];
-                R--;
-            }
-        }
 
-        return sum;
+        a.next = swapPairs(newHead);
+        b.next = a;
+
+        return b;
     }
 
+    public static class ListNode {
+        int val;
+        ListNode next;
+        ListNode() {}
+        ListNode(int val) { this.val = val; }
+        ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+    }
 }
