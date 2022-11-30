@@ -6,56 +6,94 @@ import java.util.*;
 public class MyTest {
 
     public static void main(String[] args) {
-        System.out.println(new MyTest().maxArea(new int[]{1,8,6,2,5,4,8,3,7}));
+        System.out.println(new MyTest().intToRoman(1994));
     }
 
     /**
-     11. 盛最多水的容器
+     12. 整数转罗马数字
      中等
-     3.9K
+     1K
      相关企业
-     给定一个长度为 n 的整数数组 height 。有 n 条垂线，第 i 条线的两个端点是 (i, 0) 和 (i, height[i]) 。
+     罗马数字包含以下七种字符： I， V， X， L，C，D 和 M。
 
-     找出其中的两条线，使得它们与 x 轴共同构成的容器可以容纳最多的水。
+     字符          数值
+     I             1
+     V             5
+     X             10
+     L             50
+     C             100
+     D             500
+     M             1000
+     例如， 罗马数字 2 写做 II ，即为两个并列的 1。12 写做 XII ，即为 X + II 。 27 写做  XXVII, 即为 XX + V + II 。
 
-     返回容器可以储存的最大水量。
+     通常情况下，罗马数字中小的数字在大的数字的右边。但也存在特例，例如 4 不写做 IIII，而是 IV。数字 1 在数字 5 的左边，所表示的数等于大数 5 减小数 1 得到的数值 4 。同样地，数字 9 表示为 IX。这个特殊的规则只适用于以下六种情况：
 
-     说明：你不能倾斜容器。
-
-
-
-     示例 1：
-
+     I 可以放在 V (5) 和 X (10) 的左边，来表示 4 和 9。
+     X 可以放在 L (50) 和 C (100) 的左边，来表示 40 和 90。
+     C 可以放在 D (500) 和 M (1000) 的左边，来表示 400 和 900。
+     给你一个整数，将其转为罗马数字。
 
 
-     输入：[1,8,6,2,5,4,8,3,7]
-     输出：49
-     解释：图中垂直线代表输入数组 [1,8,6,2,5,4,8,3,7]。在此情况下，容器能够容纳水（表示为蓝色部分）的最大值为 49。
-     示例 2：
 
-     输入：height = [1,1]
-     输出：1
+     示例 1:
 
-     //双指针计算面积：如果左边小，则左边加一才能获得更大的面积。右边小，则右移才能获得更大的面积。
+     输入: num = 3
+     输出: "III"
+     示例 2:
+
+     输入: num = 4
+     输出: "IV"
+     示例 3:
+
+     输入: num = 9
+     输出: "IX"
+     示例 4:
+
+     输入: num = 58
+     输出: "LVIII"
+     解释: L = 50, V = 5, III = 3.
+     示例 5:
+
+     输入: num = 1994
+     输出: "MCMXCIV"
+     解释: M = 1000, CM = 900, XC = 90, IV = 4.
+
+     //从1000-1开始相除，整数部分是几个罗马单位，剩下部分为低位；再循环。
      */
-    public int maxArea(int[] height) {
+    public String intToRoman(int num) {
+        TreeMap<Integer,String> romes = new TreeMap<>(new Comparator<Integer>() {
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                return o2-o1;
+            }
+        });
+        romes.put(1000,"M");
+        romes.put(500,"D");
+        romes.put(100,"C");
+        romes.put(50,"L");
+        romes.put(10,"X");
+        romes.put(5,"V");
+        romes.put(1,"I");
+        romes.put(4,"IV");
+        romes.put(9,"IX");
+        romes.put(40,"XL");
+        romes.put(90,"XC");
+        romes.put(400,"CD");
+        romes.put(900,"CM");
 
-        int maxArea = 0;
-        int left = 0;
-        int right = height.length-1;
-        while(left<right){
-            int area = (right-left)*Math.min(height[left],height[right]);
-            if(area>maxArea){
-                maxArea = area;
+        int n = num;
+
+        StringBuilder stringBuilder = new StringBuilder();
+        for(int element:romes.keySet()){
+            //2333 /1000=2 ... 333
+            for(int i=0;i< n/element;i++){
+                stringBuilder.append(romes.get(element));
             }
-            if(height[left]<=height[right]){
-                left++;
-            }else{
-                right--;
-            }
+            n = n % element;
         }
 
-        return maxArea;
+
+        return stringBuilder.toString();
 
     }
 
