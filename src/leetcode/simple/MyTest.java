@@ -6,69 +6,63 @@ import java.util.*;
 public class MyTest {
 
     public static void main(String[] args) {
-        System.out.println(new MyTest().threeSumClosest(new int[]{-1, 2, 1, -4}, 1));
+        System.out.println(new MyTest().fourSum(new int[]{1000000000,1000000000,1000000000,1000000000}, -294967296));
     }
 
     /**
-     * 16. 最接近的三数之和
+     * 18. 四数之和
      * 中等
-     * 1.3K
+     * 1.4K
      * 相关企业
-     * 给你一个长度为 n 的整数数组 nums 和 一个目标值 target。请你从 nums 中选出三个整数，使它们的和与 target 最接近。
-     * <p>
-     * 返回这三个数的和。
-     * <p>
-     * 假定每组输入只存在恰好一个解。
-     * <p>
-     * <p>
-     * <p>
-     * 示例 1：
-     * <p>
-     * 输入：nums = [-1,2,1,-4], target = 1
-     * 输出：2
-     * 解释：与 target 最接近的和是 2 (-1 + 2 + 1 = 2) 。
-     * 示例 2：
-     * <p>
-     * 输入：nums = [0,0,0], target = 1
-     * 输出：0
-     * <p>
-     * <p>
-     * 提示：
-     * <p>
-     * 3 <= nums.length <= 1000
-     * -1000 <= nums[i] <= 1000
-     * -104 <= target <= 104
+     * 给你一个由 n 个整数组成的数组 nums ，和一个目标值 target 。请你找出并返回满足下述全部条件且不重复的四元组 [nums[a], nums[b], nums[c], nums[d]] （若两个四元组元素一一对应，则认为两个四元组重复）：
      *
-     * 排序+双指针。三数字和>target，则左移；反之右移。
+     * 0 <= a, b, c, d < n
+     * a、b、c 和 d 互不相同
+     * nums[a] + nums[b] + nums[c] + nums[d] == target
+     * 你可以按 任意顺序 返回答案 。
+     *
+     *
+     *
+     * 示例 1：
+     *
+     * 输入：nums = [1,0,-1,0,-2,2], target = 0
+     * 输出：[[-2,-1,1,2],[-2,0,0,2],[-1,0,0,1]]
+     * 示例 2：
+     *
+     * 输入：nums = [2,2,2,2,2], target = 8
+     * 输出：[[2,2,2,2]]
+     * @param nums
+     * @param target
+     * @return
+     *
+     * 仍然是排序+双指针降低一维
      */
-    public int threeSumClosest(int[] nums, int target) {
-
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        List<List<Integer>> groups = new ArrayList<>();
         Arrays.sort(nums);
+        for(int a=0;a<nums.length-1;a++){
+            for(int b=a+1;b<nums.length-1;b++){
+                int L = b+1;//保证下标各不相等
+                int R = nums.length -1;
+                while(L<R && L<nums.length -1){
 
-        int closeTotal = 0;
-        int minDiff = Integer.MAX_VALUE;
-        for (int i = 0; i < nums.length; i++) {
-            int L = i + 1;
-            int R = nums.length - 1;
-            while(L<R){
-                int total = nums[L] + nums[R] + nums[i];
-                int diff = total - target;
-                if(diff==0){
-                    return target;
-                }else if(diff>0){
-                    R--;
-                }else{
-                    L++;
-                }
-                if(Math.abs(diff)<minDiff){
-                    minDiff = Math.abs(diff);
-                    closeTotal = total;
+                    //long防止int相加溢出
+                    long sum = (long)nums[a]+nums[b]+nums[L]+nums[R];
+                    if(sum==target){
+                        //add to result
+                        groups.add(Arrays.asList(nums[a],nums[b],nums[L],nums[R]));
+                        L++;
+                        R--;
+                    }else if(sum>target){
+                        R--;
+                    }else{
+                        L++;
+                    }
                 }
             }
-
         }
 
-        return closeTotal;
+        return groups.stream().distinct().toList();
     }
 
 }
