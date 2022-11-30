@@ -6,61 +6,48 @@ import java.util.*;
 public class MyTest {
 
     public static void main(String[] args) {
-        System.out.println(new MyTest().reverse(-1463847412));
+        System.out.println(new MyTest().isPalindrome(1234321));
     }
 
     /**
-     * 7. 整数反转
-     * 中等
-     * 3.7K
+     * 9. 回文数
+     * 简单
+     * 2.3K
      * 相关企业
-     * 给你一个 32 位的有符号整数 x ，返回将 x 中的数字部分反转后的结果。
+     * 给你一个整数 x ，如果 x 是一个回文整数，返回 true ；否则，返回 false 。
      *
-     * 如果反转后整数超过 32 位的有符号整数的范围 [−231,  231 − 1] ，就返回 0。
+     * 回文数是指正序（从左向右）和倒序（从右向左）读都是一样的整数。
      *
-     * 假设环境不允许存储 64 位整数（有符号或无符号）。
+     * 例如，121 是回文，而 123 不是。
      *
      *
      * 示例 1：
      *
-     * 输入：x = 123
-     * 输出：321
+     * 输入：x = 121
+     * 输出：true
      * 示例 2：
      *
-     * 输入：x = -123
-     * 输出：-321
+     * 输入：x = -121
+     * 输出：false
+     * 解释：从左向右读, 为 -121 。 从右向左读, 为 121- 。因此它不是一个回文数。
      * 示例 3：
      *
-     * 输入：x = 120
-     * 输出：21
-     * 示例 4：
-     *
-     * 输入：x = 0
-     * 输出：0
+     * 输入：x = 10
+     * 输出：false
+     * 解释：从右向左读, 为 01 。因此它不是一个回文数。
      * @param x
      * @return
-     *
-     * 123->321
-     * =32*10+1
-     * =3*10+2
+     * 字符串解决+数字反序
      */
-    public int reverse(int x) {
+    public boolean isPalindrome(int x) {
+        if(x<0)return false;
+        int old = x;
         int temp = 0;
         while(x!=0){
-            if(temp>Integer.MAX_VALUE/10||(temp==Integer.MAX_VALUE/10 && (x%10)>(Integer.MAX_VALUE%10) )){
-                temp = 0;
-                break;
-            }
-            if(temp<Integer.MIN_VALUE/10||(temp==Integer.MIN_VALUE/10 && (x%10)<(Integer.MIN_VALUE%10) )){
-                temp = 0;
-                break;
-            }
-            temp = temp*10+x%10;
-            x = x / 10;
+            temp = temp*10 + x%10;
+            x = x/10;
         }
-
-        return temp;
-
+        return temp == old;
     }
 
 }
