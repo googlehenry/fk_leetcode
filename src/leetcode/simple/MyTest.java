@@ -6,7 +6,7 @@ import java.util.*;
 public class MyTest {
 
     public static void main(String[] args) {
-        System.out.println(new MyTest().fourSum(new int[]{1000000000,1000000000,1000000000,1000000000}, -294967296));
+        System.out.println(new MyTest().fourSum(new int[]{0,0,0,1000000000,1000000000,1000000000,1000000000}, 1000000000));
     }
 
     /**
@@ -41,9 +41,29 @@ public class MyTest {
         List<List<Integer>> groups = new ArrayList<>();
         Arrays.sort(nums);
         for(int a=0;a<nums.length-1;a++){
+            //剪枝
+            if(nums.length>=4) {
+                if ((long)nums[a] + nums[nums.length - 1] + nums[nums.length - 2] + nums[nums.length - 3] < target) {
+                    continue;
+                }
+                if ((a+3<nums.length) && (long)nums[a] + nums[a+1] + nums[a + 2] + nums[a + 3] > target) {
+                    continue;
+                }
+            }
             for(int b=a+1;b<nums.length-1;b++){
+                //剪枝
+                if(nums.length>=4) {
+                    if ((long)nums[a] + nums[b] + nums[nums.length - 1] + nums[nums.length - 2] < target) {
+                        continue;
+                    }
+                    if ((b+2<nums.length) && (long)nums[a] + nums[b] + nums[b + 1] + nums[b + 2] > target) {
+                        continue;
+                    }
+                }
+
                 int L = b+1;//保证下标各不相等
                 int R = nums.length -1;
+
                 while(L<R && L<nums.length -1){
 
                     //long防止int相加溢出
