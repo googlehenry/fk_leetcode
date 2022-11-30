@@ -84,14 +84,10 @@ public class MyTest {
             if (character >= '0' && character <= '9') {
                 int digit = character - '0';
                 if (sign==1 &&(total > Integer.MAX_VALUE / 10 || (total == Integer.MAX_VALUE / 10 && digit > Integer.MAX_VALUE % 10))) {
-                    total = Integer.MAX_VALUE;
-                    sign = 1;
-                    break;
+                    return Integer.MAX_VALUE;
                 }
                 if(sign==-1 && (-total < Integer.MIN_VALUE / 10 || (-total == Integer.MIN_VALUE / 10 && -digit < Integer.MIN_VALUE % 10))){
-                    total = Integer.MIN_VALUE;
-                    sign = 1;
-                    break;
+                    return Integer.MIN_VALUE;
                 }
 
                 total = total * 10 + digit;
