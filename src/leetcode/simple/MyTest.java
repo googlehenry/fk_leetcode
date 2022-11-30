@@ -6,81 +6,61 @@ import java.util.*;
 public class MyTest {
 
     public static void main(String[] args) {
-        System.out.println(new MyTest().threeSum(new int[]{-4,-2,-2,-2,0,1,2,2,2,3,3,4,4,6,6}));
+        System.out.println(new MyTest().reverse(-1463847412));
     }
 
     /**
-     * 15. 三数之和
+     * 7. 整数反转
      * 中等
-     * 5.4K
+     * 3.7K
      * 相关企业
-     * 给你一个整数数组 nums ，判断是否存在三元组 [nums[i], nums[j], nums[k]] 满足 i != j、i != k 且 j != k ，同时还满足 nums[i] + nums[j] + nums[k] == 0 。请
+     * 给你一个 32 位的有符号整数 x ，返回将 x 中的数字部分反转后的结果。
      *
-     * 你返回所有和为 0 且不重复的三元组。
+     * 如果反转后整数超过 32 位的有符号整数的范围 [−231,  231 − 1] ，就返回 0。
      *
-     * 注意：答案中不可以包含重复的三元组。
-     *
-     *
-     *
+     * 假设环境不允许存储 64 位整数（有符号或无符号）。
      *
      *
      * 示例 1：
      *
-     * 输入：nums = [-1,0,1,2,-1,-4]
-     * 输出：[[-1,-1,2],[-1,0,1]]
-     * 解释：
-     * nums[0] + nums[1] + nums[2] = (-1) + 0 + 1 = 0 。
-     * nums[1] + nums[2] + nums[4] = 0 + 1 + (-1) = 0 。
-     * nums[0] + nums[3] + nums[4] = (-1) + 2 + (-1) = 0 。
-     * 不同的三元组是 [-1,0,1] 和 [-1,-1,2] 。
-     * 注意，输出的顺序和三元组的顺序并不重要。
+     * 输入：x = 123
+     * 输出：321
      * 示例 2：
      *
-     * 输入：nums = [0,1,1]
-     * 输出：[]
-     * 解释：唯一可能的三元组和不为 0 。
+     * 输入：x = -123
+     * 输出：-321
      * 示例 3：
      *
-     * 输入：nums = [0,0,0]
-     * 输出：[[0,0,0]]
-     * 解释：唯一可能的三元组和为 0 。
-     * @param nums
+     * 输入：x = 120
+     * 输出：21
+     * 示例 4：
+     *
+     * 输入：x = 0
+     * 输出：0
+     * @param x
      * @return
-     * 排序+双指针。根据三数和移动指针
+     *
+     * 123->321
+     * =32*10+1
+     * =3*10+2
      */
-    public List<List<Integer>> threeSum(int[] nums) {
-        //1正+2负
-        //1负+2正
-        //0算正
-        Arrays.sort(nums);
-        Set<String> set = new HashSet<>();
-        List<List<Integer>> groups = new ArrayList<>();
-        for(int i=0;i<nums.length;i++){
-            int x = i+1;
-            int y = nums.length - 1;
-
-
-
-            while(y>x){
-
-                int sum = nums[i]+nums[x]+nums[y];
-                if(sum==0){
-                    if(!set.contains(""+nums[i]+nums[x]+nums[y])){
-                        groups.add(Arrays.asList(nums[i],nums[x],nums[y]));
-                        set.add(""+nums[i]+nums[x]+nums[y]);
-                    }
-                    x++;
-                    y--;
-                }else if(sum>0){
-                    y--;
-                }else{
-                    x++;
-                }
+    public int reverse(int x) {
+        int temp = 0;
+        while(x!=0){
+            if(temp>Integer.MAX_VALUE/10||(temp==Integer.MAX_VALUE/10 && (x%10)>(Integer.MAX_VALUE%10) )){
+                temp = 0;
+                break;
             }
-
+            if(temp<Integer.MIN_VALUE/10||(temp==Integer.MIN_VALUE/10 && (x%10)<(Integer.MIN_VALUE%10) )){
+                temp = 0;
+                break;
+            }
+            temp = temp*10+x%10;
+            x = x / 10;
         }
 
-        return groups;
+        return temp;
+
     }
 
 }
