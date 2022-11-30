@@ -35,37 +35,27 @@ public class MyTest {
      * @return
      * 求每一个列能收集的水，min(maxLeft,maxRight)-height(i)
      * 使用动态规划计算每一位的maxLeft和maxRight.降低复杂度到O(n)
+     * 利用双指针计算进一步降低时空复杂度。
      */
     public int trap(int[] height) {
-        /**
-         *  s[i] = min(h[i-n..],h[i+n...])-h[i]
-         */
 
         if(height.length<=2)return 0;
-
-        //使用动态规划计算每一位的maxLeft和maxRight.
-        int[] maxLefts = new int[height.length];
-        maxLefts[0] = height[0];
-        //maxLeft(i) = max(maxLeft(i-1),height(i))
-        for(int i=1;i<height.length;i++){
-            maxLefts[i] = Math.max(maxLefts[i-1],height[i]);
-        }
-
-        int[] maxRights = new int[height.length];
-        maxRights[height.length-1] = height[height.length-1];
-        //maxRight(i) = max(maxRight(i+1),height(i))
-        for(int i=height.length-2;i>=0;i--){
-            maxRights[i] = Math.max(maxRights[i+1],height[i]);
-        }
-
-
         int sum = 0;
-        for(int i = 0;i<height.length;i++){
-            int cur = height[i];
-            int maxL = maxLefts[i];
-            int maxR = maxRights[i];
-            int area = Math.max(0,Math.min(maxL,maxR)-cur);
-            sum += area;
+        int L = 0;
+        int R = height.length - 1;
+        int maxL = 0;
+        int maxR = 0;
+        while(L<R){
+            maxL = Math.max(maxL,height[L]);
+            maxR = Math.max(maxR,height[R]);
+
+            if(maxL<maxR){
+                sum += maxL - height[L];
+                L++;
+            }else{
+                sum += maxR - height[R];
+                R--;
+            }
         }
 
         return sum;
