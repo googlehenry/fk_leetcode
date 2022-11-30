@@ -1,88 +1,70 @@
 package leetcode.simple;
 
+import java.awt.geom.Area;
 import java.lang.reflect.Array;
 import java.util.*;
+import java.util.jar.JarEntry;
 
 public class MyTest {
 
     public static void main(String[] args) {
-        System.out.println(new MyTest().fourSum(new int[]{0,0,0,1000000000,1000000000,1000000000,1000000000}, 1000000000));
+        System.out.println(new MyTest().trap(new int[]{4,2,0,3,2,5}));
     }
 
     /**
-     * 18. 四数之和
-     * 中等
-     * 1.4K
+     * 42. 接雨水
+     * 困难
+     * 4K
      * 相关企业
-     * 给你一个由 n 个整数组成的数组 nums ，和一个目标值 target 。请你找出并返回满足下述全部条件且不重复的四元组 [nums[a], nums[b], nums[c], nums[d]] （若两个四元组元素一一对应，则认为两个四元组重复）：
-     *
-     * 0 <= a, b, c, d < n
-     * a、b、c 和 d 互不相同
-     * nums[a] + nums[b] + nums[c] + nums[d] == target
-     * 你可以按 任意顺序 返回答案 。
+     * 给定 n 个非负整数表示每个宽度为 1 的柱子的高度图，计算按此排列的柱子，下雨之后能接多少雨水。
      *
      *
      *
      * 示例 1：
      *
-     * 输入：nums = [1,0,-1,0,-2,2], target = 0
-     * 输出：[[-2,-1,1,2],[-2,0,0,2],[-1,0,0,1]]
+     *
+     *
+     * 输入：height = [0,1,0,2,1,0,1,3,2,1,2,1]
+     * 输出：6
+     * 解释：上面是由数组 [0,1,0,2,1,0,1,3,2,1,2,1] 表示的高度图，在这种情况下，可以接 6 个单位的雨水（蓝色部分表示雨水）。
      * 示例 2：
      *
-     * 输入：nums = [2,2,2,2,2], target = 8
-     * 输出：[[2,2,2,2]]
-     * @param nums
-     * @param target
+     * 输入：height = [4,2,0,3,2,5]
+     * 输出：9
+     * @param height
      * @return
-     *
-     * 仍然是排序+双指针降低一维
+     * 求每一个列能收集的水，min(maxLeft,maxRight)-height(i)
      */
-    public List<List<Integer>> fourSum(int[] nums, int target) {
-        List<List<Integer>> groups = new ArrayList<>();
-        Arrays.sort(nums);
-        for(int a=0;a<nums.length-1;a++){
-            //剪枝
-            if(nums.length>=4) {
-                if ((long)nums[a] + nums[nums.length - 1] + nums[nums.length - 2] + nums[nums.length - 3] < target) {
-                    continue;
+    public int trap(int[] height) {
+        /**
+         *  s[i] = min(h[i-n..],h[i+n...])-h[i]
+         */
+
+        int sum = 0;
+        for(int i = 0;i<height.length;i++){
+            int cur = height[i];
+            int L = i-1;
+            int R = i+1;
+            int maxL = 0;
+            int maxR = 0;
+            while(L>=0){
+                if(height[L]>maxL){
+                    maxL = height[L];
                 }
-                if ((a+3<nums.length) && (long)nums[a] + nums[a+1] + nums[a + 2] + nums[a + 3] > target) {
-                    continue;
-                }
+                L--;
             }
-            for(int b=a+1;b<nums.length-1;b++){
-                //剪枝
-                if(nums.length>=4) {
-                    if ((long)nums[a] + nums[b] + nums[nums.length - 1] + nums[nums.length - 2] < target) {
-                        continue;
-                    }
-                    if ((b+2<nums.length) && (long)nums[a] + nums[b] + nums[b + 1] + nums[b + 2] > target) {
-                        continue;
-                    }
+            while(R<height.length){
+                if(height[R]>maxR){
+                    maxR = height[R];
                 }
-
-                int L = b+1;//保证下标各不相等
-                int R = nums.length -1;
-
-                while(L<R && L<nums.length -1){
-
-                    //long防止int相加溢出
-                    long sum = (long)nums[a]+nums[b]+nums[L]+nums[R];
-                    if(sum==target){
-                        //add to result
-                        groups.add(Arrays.asList(nums[a],nums[b],nums[L],nums[R]));
-                        L++;
-                        R--;
-                    }else if(sum>target){
-                        R--;
-                    }else{
-                        L++;
-                    }
-                }
+                R++;
             }
+
+            int area = Math.max(0,Math.min(maxL,maxR)-cur);
+            sum += area;
         }
 
-        return groups.stream().distinct().toList();
+        return sum;
     }
 
 }
