@@ -20,19 +20,16 @@ public class MyTest {
         if(head.next==null) return head;
         //1->2->3->4
         //2->1->3->4
-        ListNode tempHead = head;
-        ListNode tobeSwaped = head.next;
+        ListNode tobeSwapped = head.next;
         head.next = null;
-        ListNode remainingHead = null;
-        while(tobeSwaped!=null){
-            //change this and second
-            remainingHead = tobeSwaped.next;
-            tobeSwaped.next = tempHead;
-            tempHead = tobeSwaped;
-            tobeSwaped = remainingHead;
+        while(tobeSwapped!=null){
+            ListNode remainingHead = tobeSwapped.next;
+            tobeSwapped.next = head;
+            head = tobeSwapped;
+            tobeSwapped = remainingHead;
         }
 
-        return tempHead;
+        return head;
     }
 
     public static class ListNode {
