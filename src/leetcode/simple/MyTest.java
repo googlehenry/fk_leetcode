@@ -35,12 +35,30 @@ public class MyTest {
 
      输入: [3,2,3,1,2,4,5,5,6], k = 4
      输出: 4
-     //排序直接寻找地址。
+     //建立一个定长数组。应该去建立一个大顶堆，但要固定长度。
      */
     public int findKthLargest(int[] nums, int k) {
-        Arrays.sort(nums);
-        int idx = nums.length-k;
-        return nums[idx];
+        int[] resultK = new int[k];
+        for(int i = 0;i<k;i++){
+            resultK[i] = Integer.MIN_VALUE;
+        }
+
+        for(int i=0;i<nums.length;i++){
+            int findIdx = resultK.length;
+           for(int j=resultK.length-1;j>=0;j--){
+               if(nums[i]>resultK[j]){
+                  findIdx = j;
+               }
+           }
+
+           for(int j = resultK.length-1; j>findIdx;j--){
+               resultK[j] = resultK[j-1];
+           }
+           if(findIdx<resultK.length) {
+               resultK[findIdx] = nums[i];
+           }
+        }
+        return resultK[resultK.length-1];
     }
 
     public static class ListNode {
