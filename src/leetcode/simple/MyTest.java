@@ -11,69 +11,80 @@ import java.util.jar.JarEntry;
 public class MyTest {
 
     public static void main(String[] args) {
-        System.out.println(new MyTest().removeElement(new int[]{1},1));
+        ListNode sorted = new MyTest().sortList(new ListNode(1,new ListNode(6,new ListNode(2,new ListNode(9, new ListNode(5,new ListNode(2)))))));
+        System.out.println(sorted);
     }
 
-
     /**
-     * 27. 移除元素
-     * 简单
-     * 1.6K
+     * 148. 排序链表
+     * 中等
+     * 1.8K
      * 相关企业
-     * 给你一个数组 nums 和一个值 val，你需要 原地 移除所有数值等于 val 的元素，并返回移除后数组的新长度。
+     * 给你链表的头结点 head ，请将其按 升序 排列并返回 排序后的链表 。
      *
-     * 不要使用额外的数组空间，你必须仅使用 O(1) 额外空间并 原地 修改输入数组。
-     *
-     * 元素的顺序可以改变。你不需要考虑数组中超出新长度后面的元素。
-     *
-     *
-     *
-     * 说明:
-     *
-     * 为什么返回数值是整数，但输出的答案是数组呢?
-     *
-     * 请注意，输入数组是以「引用」方式传递的，这意味着在函数里修改输入数组对于调用者是可见的。
-     *
-     * 你可以想象内部操作如下:
-     *
-     * // nums 是以“引用”方式传递的。也就是说，不对实参作任何拷贝
-     * int len = removeElement(nums, val);
-     *
-     * // 在函数里修改输入数组对于调用者是可见的。
-     * // 根据你的函数返回的长度, 它会打印出数组中 该长度范围内 的所有元素。
-     * for (int i = 0; i < len; i++) {
-     *     print(nums[i]);
-     * }
      *
      *
      * 示例 1：
      *
-     * 输入：nums = [3,2,2,3], val = 3
-     * 输出：2, nums = [2,2]
-     * 解释：函数应该返回新的长度 2, 并且 nums 中的前两个元素均为 2。你不需要考虑数组中超出新长度后面的元素。例如，函数返回的新长度为 2 ，而 nums = [2,2,3,3] 或 nums = [2,2,0,0]，也会被视作正确答案。
+     *
+     * 输入：head = [4,2,1,3]
+     * 输出：[1,2,3,4]
      * 示例 2：
      *
-     * 输入：nums = [0,1,2,2,3,0,4,2], val = 2
-     * 输出：5, nums = [0,1,4,0,3]
-     * 解释：函数应该返回新的长度 5, 并且 nums 中的前五个元素为 0, 1, 3, 0, 4。注意这五个元素可为任意顺序。你不需要考虑数组中超出新长度后面的元素。
-     * @param nums
-     * @param val
+     *
+     * 输入：head = [-1,5,3,4,0]
+     * 输出：[-1,0,3,4,5]
+     * 示例 3：
+     *
+     * 输入：head = []
+     * 输出：[]
+     *
+     *
+     * 提示：
+     *
+     * 链表中节点的数目在范围 [0, 5 * 104] 内
+     * -105 <= Node.val <= 105
+     * @param head
      * @return
-     * 双指针移除元素，从两边开始。
      */
-    public int removeElement(int[] nums, int val) {
-        int L = 0;
-        int R = nums.length -1;
-        while(L<=R){
-            if(nums[L]==val){
-                nums[L] = nums[R];
-                R--;
+    public ListNode sortList(ListNode head) {
+        //拆两半用归并
+        if(head==null || head.next==null)return head;
+
+        ListNode slow = head, fast = head.next;
+        while(fast!=null && fast.next!=null){
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        ListNode midNext = slow.next;
+        slow.next = null;
+
+        ListNode left = sortList(head);
+        ListNode right = sortList(midNext);
+
+        ListNode rootDummy = new ListNode();
+        ListNode temp = rootDummy;
+        //merge
+        while(left!=null || right!=null){
+            if(left==null){
+                temp.next = right;
+                right = right.next;
+            }else if(right==null){
+                temp.next = left;
+                left = left.next;
             }else{
-                L++;
+                if(left.val< right.val){
+                    temp.next = left;
+                    left = left.next;
+                }else{
+                    temp.next = right;
+                    right = right.next;
+                }
             }
+            temp = temp.next;
         }
 
-        return R+1;
+        return rootDummy.next;
     }
 
     public static class ListNode {
