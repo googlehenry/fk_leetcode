@@ -11,7 +11,7 @@ import java.util.jar.JarEntry;
 public class MyTest {
 
     public static void main(String[] args) {
-        System.out.println(new MyTest().removeElement(new int[]{3,2,2,3},3));
+        System.out.println(new MyTest().removeElement(new int[]{1},1));
     }
 
 
@@ -59,20 +59,21 @@ public class MyTest {
      * @param nums
      * @param val
      * @return
+     * 双指针移除元素，从两边开始。
      */
     public int removeElement(int[] nums, int val) {
-        int count = 0;
-        for(int i=0;i<nums.length-count;i++){
-            if(val==nums[i]){
-                //move array
-                for(int j=i;j<nums.length-1;j++){
-                    nums[j] = nums[j+1];
-                }
-                i--;
-                count++;
+        int L = 0;
+        int R = nums.length -1;
+        while(L<=R){
+            if(nums[L]==val){
+                nums[L] = nums[R];
+                R--;
+            }else{
+                L++;
             }
         }
-        return nums.length - count;
+
+        return R+1;
     }
 
     public static class ListNode {
