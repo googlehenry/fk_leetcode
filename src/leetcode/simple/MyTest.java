@@ -11,68 +11,36 @@ import java.util.jar.JarEntry;
 public class MyTest {
 
     public static void main(String[] args) {
-        System.out.println(new MyTest().frequencySort("raaeaedere"));
+        System.out.println(new MyTest().findKthLargest(new int[]{3,2,1,5,6,4},2));
     }
 
     /**
-     * 451. 根据字符出现频率排序
-     * 中等
-     * 445
-     * 相关企业
-     * 给定一个字符串 s ，根据字符出现的 频率 对其进行 降序排序 。一个字符出现的 频率 是它出现在字符串中的次数。
-     *
-     * 返回 已排序的字符串 。如果有多个答案，返回其中任何一个。
-     *
-     *
-     *
-     * 示例 1:
-     *
-     * 输入: s = "tree"
-     * 输出: "eert"
-     * 解释: 'e'出现两次，'r'和't'都只出现一次。
-     * 因此'e'必须出现在'r'和't'之前。此外，"eetr"也是一个有效的答案。
-     * 示例 2:
-     *
-     * 输入: s = "cccaaa"
-     * 输出: "cccaaa"
-     * 解释: 'c'和'a'都出现三次。此外，"aaaccc"也是有效的答案。
-     * 注意"cacaca"是不正确的，因为相同的字母必须放在一起。
+     215. 数组中的第K个最大元素
+     中等
+     2K
+     相关企业
+     给定整数数组 nums 和整数 k，请返回数组中第 k 个最大的元素。
+
+     请注意，你需要找的是数组排序后的第 k 个最大的元素，而不是第 k 个不同的元素。
+
+     你必须设计并实现时间复杂度为 O(n) 的算法解决此问题。
+
+
+
+     示例 1:
+
+     输入: [3,2,1,5,6,4], k = 2
+     输出: 5
+     示例 2:
+
+     输入: [3,2,3,1,2,4,5,5,6], k = 4
+     输出: 4
+     //排序直接寻找地址。
      */
-    public String frequencySort(String s) {
-        if(s==null || s.length()==1) return s;
-
-        char[] arrs = s.toCharArray();
-        Arrays.sort(arrs);
-
-        PriorityQueue<Map.Entry<Integer,Character>> freqChars = new PriorityQueue<>(s.length(), new Comparator<Map.Entry<Integer, Character>>() {
-            @Override
-            public int compare(Map.Entry<Integer, Character> o1, Map.Entry<Integer, Character> o2) {
-                return o2.getKey()-o1.getKey();
-            }
-        });
-
-        int L = 0;
-        int R = 1;
-        while(R<arrs.length){
-            if(arrs[L]==arrs[R]){
-                R++;
-            }else{
-                freqChars.add(Map.entry(R-L,arrs[L]));
-                L = R;
-                R++;
-            }
-        }
-        freqChars.add(Map.entry(R-L,arrs[L]));
-
-        StringBuilder stringBuilder = new StringBuilder();
-        while(!freqChars.isEmpty()){
-            Map.Entry<Integer,Character> entry = freqChars.poll();
-            for(int i=0;i<entry.getKey();i++){
-                stringBuilder.append(entry.getValue());
-            }
-        }
-
-        return stringBuilder.toString();
+    public int findKthLargest(int[] nums, int k) {
+        Arrays.sort(nums);
+        int idx = nums.length-k;
+        return nums[idx];
     }
 
     public static class ListNode {
