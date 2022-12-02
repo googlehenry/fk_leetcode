@@ -5,6 +5,7 @@ import com.sun.source.tree.Tree;
 import java.awt.geom.Area;
 import java.lang.reflect.Array;
 import java.util.*;
+import java.util.function.IntFunction;
 import java.util.jar.JarEntry;
 
 public class MyTest {
@@ -43,17 +44,17 @@ public class MyTest {
      * @param nums
      * @param k
      * @return
-     * 使用hashmap
+     * 使用PriorityQueue
      */
     public int[] topKFrequent(int[] nums, int k) {
 
         Arrays.sort(nums);
         int L = 0;
         int R = 0;
-        TreeMap<Integer,List<Integer>> freqToNumberMap = new TreeMap<>(new Comparator<Integer>() {
+        PriorityQueue<Map.Entry<Integer,Integer>> topK = new PriorityQueue<>(k,new Comparator<Map.Entry<Integer, Integer>>() {
             @Override
-            public int compare(Integer o1, Integer o2) {
-                return o2-o1;
+            public int compare(Map.Entry<Integer, Integer> o1, Map.Entry<Integer, Integer> o2) {
+                return o2.getKey()-o1.getKey();
             }
         });
 
@@ -62,25 +63,18 @@ public class MyTest {
                 R++;
             }else{
                 int freq = R-L; //aab
-                List<Integer> arrs = freqToNumberMap.get(freq)==null?new ArrayList<>() : freqToNumberMap.get(freq);
-                arrs.add(nums[L]);
-                freqToNumberMap.put(freq,arrs);
+                topK.add(Map.entry(freq,nums[L]));
                 L = R;
                 R++;
             }
         }
 
         int[] result = new int[k];
-
-        Iterator<Map.Entry<Integer,List<Integer>>> iterator = freqToNumberMap.entrySet().iterator();
         int counter = 0;
-        while(iterator.hasNext() && counter<k){
-            List<Integer> arrs = iterator.next().getValue();
-            for(int i=0;i<arrs.size();i++){
-                result[counter++] = arrs.get(i);
-                if(counter>=k)break;
-            }
+        while(!topK.isEmpty() && counter<k){
+            result[counter++] = topK.poll().getValue();
         }
+
         return result;
     }
 
