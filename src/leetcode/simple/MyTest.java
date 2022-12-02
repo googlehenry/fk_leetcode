@@ -43,6 +43,7 @@ public class MyTest {
      * @param nums
      * @param k
      * @return
+     * 使用hashmap
      */
     public int[] topKFrequent(int[] nums, int k) {
 
