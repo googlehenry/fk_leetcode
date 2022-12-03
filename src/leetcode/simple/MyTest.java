@@ -11,87 +11,97 @@ import java.util.jar.JarEntry;
 public class MyTest {
 
     public static void main(String[] args) {
-        ListNode sorted = new MyTest().sortList(new ListNode(1,new ListNode(6,new ListNode(2,new ListNode(9, new ListNode(5,new ListNode(2)))))));
-        System.out.println(sorted);
+        System.out.println(new MyTest().merge(new int[][]{{1, 3}, {2, 6}, {8, 10}, {15, 18}}));
     }
 
     /**
-     * 148. 排序链表
+     * 56. 合并区间
      * 中等
-     * 1.8K
+     * 1.7K
      * 相关企业
-     * 给你链表的头结点 head ，请将其按 升序 排列并返回 排序后的链表 。
+     * 以数组 intervals 表示若干个区间的集合，其中单个区间为 intervals[i] = [starti, endi] 。请你合并所有重叠的区间，并返回 一个不重叠的区间数组，该数组需恰好覆盖输入中的所有区间 。
      *
      *
      *
      * 示例 1：
      *
-     *
-     * 输入：head = [4,2,1,3]
-     * 输出：[1,2,3,4]
+     * 输入：intervals = [[1,3],[2,6],[8,10],[15,18]]
+     * 输出：[[1,6],[8,10],[15,18]]
+     * 解释：区间 [1,3] 和 [2,6] 重叠, 将它们合并为 [1,6].
      * 示例 2：
      *
-     *
-     * 输入：head = [-1,5,3,4,0]
-     * 输出：[-1,0,3,4,5]
-     * 示例 3：
-     *
-     * 输入：head = []
-     * 输出：[]
-     *
-     *
-     * 提示：
-     *
-     * 链表中节点的数目在范围 [0, 5 * 104] 内
-     * -105 <= Node.val <= 105
-     * @param head
+     * 输入：intervals = [[1,4],[4,5]]
+     * 输出：[[1,5]]
+     * 解释：区间 [1,4] 和 [4,5] 可被视为重叠区间。
+     * @param intervals
      * @return
      */
-    public ListNode sortList(ListNode head) {
-        //拆两半用归并
-        if(head==null || head.next==null)return head;
+    public int[][] merge(int[][] intervals) {
 
-        ListNode slow = head, fast = head.next;
-        while(fast!=null && fast.next!=null){
-            slow = slow.next;
-            fast = fast.next.next;
-        }
-        ListNode midNext = slow.next;
-        slow.next = null;
-
-        ListNode left = sortList(head);
-        ListNode right = sortList(midNext);
-
-        ListNode rootDummy = new ListNode();
-        ListNode temp = rootDummy;
-        //merge
-        while(left!=null || right!=null){
-            if(left==null){
-                temp.next = right;
-                right = right.next;
-            }else if(right==null){
-                temp.next = left;
-                left = left.next;
-            }else{
-                if(left.val< right.val){
-                    temp.next = left;
-                    left = left.next;
-                }else{
-                    temp.next = right;
-                    right = right.next;
-                }
+        Arrays.sort(intervals,new Comparator<int[]>(){
+            @Override
+            public int compare(int[] o1, int[] o2) {
+                return o1[0]-o2[0];
             }
-            temp = temp.next;
+        });
+
+        int i = 0;
+        int j = 1;
+        while(i<intervals.length && j<intervals.length){
+            if(intervals[i]!=null) {
+                if (intervals[j] != null) {
+                    int[] arrA = intervals[i];
+                    int[] arrB = intervals[j];
+                        //based on A
+                    if (arrB[0] <= arrA[1]) {
+                        intervals[i][0] = arrA[0];
+                        intervals[i][1] = Math.max(arrB[1], arrA[1]);
+                        intervals[j] = null;
+                        j++;
+                    }else{
+                        i++;
+                        j=i+1;
+                    }
+                }else{
+                    j++;
+                }
+            }else{
+                i++;
+                j=i+1;
+            }
+        }
+        int counter = 0;
+        for (int x = 0; x < intervals.length; x++) {
+            if(intervals[x]!=null){
+                counter++;
+            }
+        }
+        int[][] result = new int[counter][2];
+
+        int c = 0;
+        for (int x = 0; x < intervals.length; x++) {
+            if(intervals[x]!=null) {
+                result[c++] = intervals[x];
+            }
         }
 
-        return rootDummy.next;
+        return result;
     }
 
     public static class ListNode {
         int val;
         ListNode next;
-        ListNode() {}
-        ListNode(int val) { this.val = val; }
-        ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+
+        ListNode() {
+        }
+
+        ListNode(int val) {
+            this.val = val;
+        }
+
+        ListNode(int val, ListNode next) {
+            this.val = val;
+            this.next = next;
+        }
     }
 }
