@@ -1,107 +1,94 @@
 package leetcode.simple;
 
-import com.sun.source.tree.Tree;
+import jdk.internal.org.objectweb.asm.ClassWriter;
+import jdk.internal.org.objectweb.asm.MethodVisitor;
 
-import java.awt.geom.Area;
-import java.lang.reflect.Array;
-import java.util.*;
-import java.util.function.IntFunction;
-import java.util.jar.JarEntry;
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
+import static jdk.internal.org.objectweb.asm.Opcodes.*;
 
 public class MyTest {
 
-    public static void main(String[] args) {
-        System.out.println(new MyTest().merge(new int[][]{{1, 3}, {2, 6}, {8, 10}, {15, 18}}));
+    public static void main(String[] args) throws Throwable {
+//        new ClassWriter(1).visit(Opcodes.V1_8, );
+
+        System.out.println(new InvokeExact().invokeExact());
+
     }
 
-    /**
-     * 56. 合并区间
-     * 中等
-     * 1.7K
-     * 相关企业
-     * 以数组 intervals 表示若干个区间的集合，其中单个区间为 intervals[i] = [starti, endi] 。请你合并所有重叠的区间，并返回 一个不重叠的区间数组，该数组需恰好覆盖输入中的所有区间 。
-     *
-     *
-     *
-     * 示例 1：
-     *
-     * 输入：intervals = [[1,3],[2,6],[8,10],[15,18]]
-     * 输出：[[1,6],[8,10],[15,18]]
-     * 解释：区间 [1,3] 和 [2,6] 重叠, 将它们合并为 [1,6].
-     * 示例 2：
-     *
-     * 输入：intervals = [[1,4],[4,5]]
-     * 输出：[[1,5]]
-     * 解释：区间 [1,4] 和 [4,5] 可被视为重叠区间。
-     * @param intervals
-     * @return
-     */
-    public int[][] merge(int[][] intervals) {
 
-        Arrays.sort(intervals,new Comparator<int[]>(){
-            @Override
-            public int compare(int[] o1, int[] o2) {
-                return o1[0]-o2[0];
-            }
-        });
+}
 
-        int i = 0;
-        int j = 1;
-        while(i<intervals.length && j<intervals.length){
-            if(intervals[i]!=null) {
-                if (intervals[j] != null) {
-                    int[] arrA = intervals[i];
-                    int[] arrB = intervals[j];
-                        //based on A
-                    if (arrB[0] <= arrA[1]) {
-                        intervals[i][0] = arrA[0];
-                        intervals[i][1] = Math.max(arrB[1], arrA[1]);
-                        intervals[j] = null;
-                        j++;
-                    }else{
-                        i++;
-                        j=i+1;
-                    }
-                }else{
-                    j++;
-                }
-            }else{
-                i++;
-                j=i+1;
-            }
-        }
-        int counter = 0;
-        for (int x = 0; x < intervals.length; x++) {
-            if(intervals[x]!=null){
-                counter++;
-            }
-        }
-        int[][] result = new int[counter][2];
+class InvokeExact {
+    public Object invokeExact() throws Throwable {
 
-        int c = 0;
-        for (int x = 0; x < intervals.length; x++) {
-            if(intervals[x]!=null) {
-                result[c++] = intervals[x];
-            }
-        }
+        Class helloWordClass = generate();
 
-        return result;
+        MethodHandles.Lookup lookup = MethodHandles.lookup();
+
+        MethodType type = MethodType.methodType(void.class, String[].class);
+        MethodHandle mh = lookup.findStatic(helloWordClass, "main", type);
+
+        return mh.invoke(null);
     }
 
-    public static class ListNode {
-        int val;
-        ListNode next;
+    public Class generate() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        ClassWriter cw = new ClassWriter(0);
+        // 定义对象头：版本号、修饰符、全类名、签名、父类、实现的接口
+        cw.visit(V1_8, ACC_PUBLIC + ACC_SUPER, "sample/HelloWorld",
+                null, "java/lang/Object", null);
 
-        ListNode() {
-        }
+        MethodVisitor mv = cw.visitMethod(ACC_PUBLIC,
+                "<init>",
+                "()V",
+                null, null);
+        //生成构造函数字节码指令 -- 加载操作
+        mv.visitVarInsn(ALOAD, 0);
+        mv.visitMethodInsn(INVOKESPECIAL,
+                "java/lang/Object",
+                "<init>",
+                "()V",
+                false);
+        mv.visitInsn(RETURN);
+        mv.visitMaxs(1, 1);
+        mv.visitEnd();
 
-        ListNode(int val) {
-            this.val = val;
-        }
+        //TODO 2.构造main函数
+        mv = cw.visitMethod(ACC_PUBLIC + ACC_STATIC,
+                "main",
+                "([Ljava/lang/String;)V",
+                null,
+                null);
 
-        ListNode(int val, ListNode next) {
-            this.val = val;
-            this.next = next;
-        }
+        //TODO 3.main方法中生成 System.out.println("Hello ASM");
+        //获取System类中的属性  System.out --    public static final PrintStream out;
+        mv.visitFieldInsn(GETSTATIC,
+                "java/lang/System",
+                "out",
+                "Ljava/io/PrintStream;");
+
+        //栈帧中 属性入栈
+        mv.visitLdcInsn("Hello ASM 123");
+        //加载 println 方法
+        mv.visitMethodInsn(INVOKEVIRTUAL,
+                "java/io/PrintStream",
+                "println",
+                "(Ljava/lang/String;)V",
+                false);
+        mv.visitInsn(RETURN);
+        mv.visitMaxs(2, 2);
+        mv.visitEnd();
+
+        byte[] code = cw.toByteArray();// 生成字节数组
+
+        //NOTE: 使用系统类加载器加载才能后续使用。
+        Method defineClass = ClassLoader.class.getDeclaredMethod("defineClass", String.class, byte[].class, int.class, int.class);
+        defineClass.setAccessible(true);
+        return (Class)defineClass.invoke(ClassLoader.getSystemClassLoader(), "sample.HelloWorld", code, 0, code.length);
+
     }
 }
