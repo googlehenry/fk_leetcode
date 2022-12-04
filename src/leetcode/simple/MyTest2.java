@@ -1,57 +1,105 @@
 package leetcode.simple;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 public class MyTest2 {
 
-    public static void main(String[] args) {
-        Set<Person> set = new HashSet<Person>();
-        Person p1 = new Person("唐僧", "pwd1", 25);
-        Person p2 = new Person("孙悟空", "pwd2", 26);
-        Person p3 = new Person("猪八戒", "pwd3", 27);
-        set.add(p1);
-        set.add(p2);
-        set.add(p3);
-        System.out.println("总共有:" + set.size() + " 个元素!"); //结果：总共有:3 个元素!
-        p3.setAge(2); //修改p3的年龄,此时p3元素对应的hashcode值发生改变
-        set.remove(p3); //此时remove不掉，造成内存泄漏
-        set.add(p3); //重新添加，居然添加成功
-        System.out.println("总共有:" + set.size() + " 个元素!"); //结果：总共有:4 个元素!
-        for (Person person : set) {
-            System.out.println(person);
+    public static void main(String[] args) throws InterruptedException {
+        new MyTest2().reverseBetween(new ListNode(3,new ListNode(4,null)),1,2);
+    }
+
+    /**
+     * 92. 反转链表 II
+     * 中等
+     * 1.5K
+     * 相关企业
+     * 给你单链表的头指针 head 和两个整数 left 和 right ，其中 left <= right 。请你反转从位置 left 到位置 right 的链表节点，返回 反转后的链表 。
+     *
+     *
+     * 示例 1：
+     *
+     *
+     * 输入：head = [1,2,3,4,5], left = 2, right = 4
+     * 输出：[1,4,3,2,5]
+     * 示例 2：
+     *
+     * 输入：head = [5], left = 1, right = 1
+     * 输出：[5]
+     * @param head
+     * @param left
+     * @param right
+     * @return
+     */
+    public ListNode reverseBetween(ListNode head, int left, int right) {
+
+        if(head==null || head.next==null) return head;
+        if(left>=right)return head;
+
+        ListNode prev = null;
+        ListNode mid = null;
+        ListNode tail = null;
+        int counter = 0;
+        while(counter<right){
+            if(counter<left) {
+                if(mid!=null) {
+                    prev =  prev == null ? head : prev.next;
+                }
+                mid = mid == null ? head : mid.next;
+            }
+            if(counter<=right){
+                tail = tail==null?head:tail.next;
+            }
+            counter++;
+        }
+
+        if(prev!=null) {
+            prev.next = null;
+        }else{
+            head = null;
+        }
+        ListNode remaining = tail.next;
+        tail.next = null;
+
+
+        //reverse mid
+
+        ListNode tempHead = mid;
+        ListNode second = mid.next;
+        tempHead.next = null;
+
+        while(second!=null){
+            ListNode temp = second.next;
+            second.next = tempHead;
+            tempHead = second;
+
+            second = temp;
+        }
+
+        if(prev!=null) {
+            prev.next = tempHead;
+            mid.next = remaining;
+            return head;
+        }else{
+            mid.next = remaining;
+            return tempHead;
         }
     }
+
 }
-class Person {
-    private String username;
-    private String password;
-    private int    age;
-    public Person(String username, String password, int age) {
-        this.username = username;
-        this.password = password;
-        this.age = age;
+
+class ListNode {
+    int val;
+    ListNode next;
+
+    ListNode() {
     }
-    public String getUsername() {
-        return username;
+
+    ListNode(int val) {
+        this.val = val;
     }
-    public void setUsername(String username) {
-        this.username = username;
-    }
-    public String getPassword() {
-        return password;
-    }
-    public void setPassword(String password) {
-        this.password = password;
-    }
-    public int getAge() {
-        return age;
-    }
-    public void setAge(int age) {
-        this.age = age;
-    }
-    @Override
-    public String toString() {
-        return this.username + "-->" + this.password + "-->" + this.age;
+
+    ListNode(int val, ListNode next) {
+        this.val = val;
+        this.next = next;
     }
 }
