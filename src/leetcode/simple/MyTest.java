@@ -27,6 +27,7 @@ public class MyTest {
      * 再写一遍堆
      * @param arr
      * @param size
+     * https://www.bilibili.com/video/BV1Kr4y1j71u/?spm_id_from=333.788&vd_source=f0bef1126b5187474df4a4be5f9c13df
      */
     private void toHeap(int[] arr, int size) {
         int nodeIdx = size / 2 - 1;//size比idx大1，所以这样是对的，不然应该是(idx_child-1)/2=idx_parent
