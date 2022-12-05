@@ -41,21 +41,18 @@ public class MyTest {
      * @return
      */
     public int longestPalindrome(String s) {
-        Map<Character,Integer> charCount = new HashMap<>();
+        char[] chars = new char[128];
 
         for(int i=0;i<s.length();i++){
-            Character  character = s.charAt(i);
-            charCount.put(character,charCount.get(character)==null?1:charCount.get(character)+1);
+            chars[s.charAt(i)]++;
         }
 
-        int sumOfEven = 0;
-        int sumOfOdd = 0;
-        for(int count:charCount.values()){
-            sumOfEven += (count/2)*2;
-            sumOfOdd += count%2;
+        int countOfOdd = 0;
+        for(int i=0;i<chars.length;i++){
+            if(chars[i]%2==1)countOfOdd++;
         }
 
-        return sumOfEven + (sumOfOdd>0?1:0);
+        return s.length() - (countOfOdd>0?countOfOdd-1:0);
     }
 }
 
