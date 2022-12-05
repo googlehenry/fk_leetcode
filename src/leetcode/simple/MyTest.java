@@ -1,11 +1,12 @@
 package leetcode.simple;
 
 import java.util.Arrays;
+import java.util.jar.JarEntry;
 
 public class MyTest {
 
     public static void main(String[] args) throws InterruptedException {
-        System.out.println(new MyTest().reverseWords("a"));
+        System.out.println(new MyTest().reverseWords("the sky is blue"));
     }
 
     /**
@@ -42,36 +43,19 @@ public class MyTest {
      * @return
      */
     public String reverseWords(String s) {
-
-        s = s.trim();
-        if(s.length()==1) return s;
-
-        int L = 0;
-        int R = s.length() - 1;
-
+        s = " "+ s;
+        int n = s.length();
         StringBuilder stringBuilder = new StringBuilder();
-        while (L>=0&&L<R) {
-
-            while (R > 0 && !isValid(s.charAt(R))) {
-                R--;
-            }
-
-            L = R;
-            while(L>=0 && isValid(s.charAt(L))){
-                L--;
-            }
-
-            if(L>=-1&&L<R){
-                stringBuilder.append(s.substring(L>=0&&isValid(s.charAt(L))?L : L+1,isValid(s.charAt(R))?R+1:R)).append(" ");
-                R = L>=0&&isValid(s.charAt(L))?L-1:L;
-                L = R-1;
+        for(int left = n-1,right=n;left>=0;left--){
+            if(s.charAt(left)==' '){
+                if(left+1<right){
+                    stringBuilder.append(s.substring(left+1,right)).append(" ");
+                }
+                right = left;
             }
         }
-        return stringBuilder.toString().trim();
-    }
 
-    private boolean isValid(Character c) {
-        return (c >= '0' && c <= '9') || (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
+        return stringBuilder.toString().trim();
     }
 }
 
