@@ -5,50 +5,74 @@ import java.util.Arrays;
 public class MyTest {
 
     public static void main(String[] args) throws InterruptedException {
-        new MyTest().middleNode(new ListNode(1,new ListNode(2,new ListNode(3,new ListNode(4, new ListNode(5,new ListNode(6, null)))))));
+        System.out.println(new MyTest().reverseWords("a"));
     }
 
     /**
-     * 876. 链表的中间结点
-     * 简单
-     * 748
+     * 151. 反转字符串中的单词
+     * 中等
+     * 706
      * 相关企业
-     * 给定一个头结点为 head 的非空单链表，返回链表的中间结点。
+     * 给你一个字符串 s ，请你反转字符串中 单词 的顺序。
      *
-     * 如果有两个中间结点，则返回第二个中间结点。
+     * 单词 是由非空格字符组成的字符串。s 中使用至少一个空格将字符串中的 单词 分隔开。
+     *
+     * 返回 单词 顺序颠倒且 单词 之间用单个空格连接的结果字符串。
+     *
+     * 注意：输入字符串 s中可能会存在前导空格、尾随空格或者单词间的多个空格。返回的结果字符串中，单词间应当仅用单个空格分隔，且不包含任何额外的空格。
      *
      *
      *
      * 示例 1：
      *
-     * 输入：[1,2,3,4,5]
-     * 输出：此列表中的结点 3 (序列化形式：[3,4,5])
-     * 返回的结点值为 3 。 (测评系统对该结点序列化表述是 [3,4,5])。
-     * 注意，我们返回了一个 ListNode 类型的对象 ans，这样：
-     * ans.val = 3, ans.next.val = 4, ans.next.next.val = 5, 以及 ans.next.next.next = NULL.
+     * 输入：s = "the sky is blue"
+     * 输出："blue is sky the"
      * 示例 2：
      *
-     * 输入：[1,2,3,4,5,6]
-     * 输出：此列表中的结点 4 (序列化形式：[4,5,6])
-     * 由于该列表有两个中间结点，值分别为 3 和 4，我们返回第二个结点。
-     * @param head
+     * 输入：s = "  hello world  "
+     * 输出："world hello"
+     * 解释：反转后的字符串中不能存在前导空格和尾随空格。
+     * 示例 3：
+     *
+     * 输入：s = "a good   example"
+     * 输出："example good a"
+     * 解释：如果两个单词间有多余的空格，反转后的字符串需要将单词间的空格减少到仅有一个。
+     * 双指针
+     * @param s
      * @return
      */
-    public ListNode middleNode(ListNode head) {
-        //快慢指针
-        if(head==null||head.next==null) return head;
+    public String reverseWords(String s) {
 
-        ListNode slow = head, fast = head.next;
+        s = s.trim();
+        if(s.length()==1) return s;
 
-        while (fast!=null && fast.next!=null){
-            slow = slow.next;
-            fast = fast.next.next;
+        int L = 0;
+        int R = s.length() - 1;
+
+        StringBuilder stringBuilder = new StringBuilder();
+        while (L>=0&&L<R) {
+
+            while (R > 0 && !isValid(s.charAt(R))) {
+                R--;
+            }
+
+            L = R;
+            while(L>=0 && isValid(s.charAt(L))){
+                L--;
+            }
+
+            if(L>=-1&&L<R){
+                stringBuilder.append(s.substring(L>=0&&isValid(s.charAt(L))?L : L+1,isValid(s.charAt(R))?R+1:R)).append(" ");
+                R = L>=0&&isValid(s.charAt(L))?L-1:L;
+                L = R-1;
+            }
         }
-
-
-        return fast==null?slow:slow.next;
+        return stringBuilder.toString().trim();
     }
 
+    private boolean isValid(Character c) {
+        return (c >= '0' && c <= '9') || (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
+    }
 }
 
 class ListNode {
